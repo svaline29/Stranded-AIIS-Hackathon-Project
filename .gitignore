@@ -1,0 +1,11 @@
+node_modules/
+.next/
+.env.local
+.env
+*.db
+*.db-journal
+.DS_Store
+/public/imagery/pre/*.png
+/public/imagery/post/*.png
+!/public/imagery/manifest.json
+node_modules
