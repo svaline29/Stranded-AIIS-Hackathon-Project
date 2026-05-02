@@ -10,7 +10,7 @@ tsconfig.tsbuildinfo
 .env
 
 # Database
-#*.db
+*.db
 *.db-journal
 *.db-shm
 *.db-wal
@@ -25,3 +25,6 @@ tsconfig.tsbuildinfo
 
 # Build artifacts
 *.tsbuildinfo
+
+#other
+SPEC.md
