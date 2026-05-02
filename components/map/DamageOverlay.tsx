@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import type { Map as MapLibreMap } from "maplibre-gl";
+import { removeLayerIfPresent, removeSourceIfPresent } from "./mapStyleUtils";
 import type { DamageFeatureCollection } from "./types";
 
 const DAMAGE_SOURCE_ID = "damage-polygons";
@@ -24,24 +25,24 @@ const severityStrokeColorExpression = [
   "match",
   ["get", "severity"],
   "destroyed",
-  "#991b1b",
+  "#ef4444",
   "major",
-  "#c2410c",
+  "#f97316",
   "minor",
-  "#a16207",
-  "#374151",
+  "#eab308",
+  "#404040",
 ] as const;
 
 const severityOpacityExpression = [
   "match",
   ["get", "severity"],
   "destroyed",
-  0.5,
+  0.35,
   "major",
-  0.4,
+  0.25,
   "minor",
-  0.3,
-  0.3,
+  0.2,
+  0.18,
 ] as const;
 
 type DamageOverlayProps = {
@@ -53,15 +54,7 @@ export const DAMAGE_FILL_BEFORE_ID = DAMAGE_FILL_LAYER_ID;
 
 export function DamageOverlay({ map, damage }: DamageOverlayProps) {
   useEffect(() => {
-    if (map.getLayer(DAMAGE_STROKE_LAYER_ID)) {
-      map.removeLayer(DAMAGE_STROKE_LAYER_ID);
-    }
-    if (map.getLayer(DAMAGE_FILL_LAYER_ID)) {
-      map.removeLayer(DAMAGE_FILL_LAYER_ID);
-    }
-    if (map.getSource(DAMAGE_SOURCE_ID)) {
-      map.removeSource(DAMAGE_SOURCE_ID);
-    }
+    removeDamageLayers(map);
 
     map.addSource(DAMAGE_SOURCE_ID, {
       type: "geojson",
@@ -88,18 +81,14 @@ export function DamageOverlay({ map, damage }: DamageOverlayProps) {
       },
     });
 
-    return () => {
-      if (map.getLayer(DAMAGE_STROKE_LAYER_ID)) {
-        map.removeLayer(DAMAGE_STROKE_LAYER_ID);
-      }
-      if (map.getLayer(DAMAGE_FILL_LAYER_ID)) {
-        map.removeLayer(DAMAGE_FILL_LAYER_ID);
-      }
-      if (map.getSource(DAMAGE_SOURCE_ID)) {
-        map.removeSource(DAMAGE_SOURCE_ID);
-      }
-    };
+    return () => removeDamageLayers(map);
   }, [damage, map]);
 
   return null;
+}
+
+function removeDamageLayers(map: MapLibreMap) {
+  removeLayerIfPresent(map, DAMAGE_STROKE_LAYER_ID);
+  removeLayerIfPresent(map, DAMAGE_FILL_LAYER_ID);
+  removeSourceIfPresent(map, DAMAGE_SOURCE_ID);
 }

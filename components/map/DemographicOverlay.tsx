@@ -3,11 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Map as MapLibreMap } from "maplibre-gl";
 import { DAMAGE_FILL_BEFORE_ID } from "./DamageOverlay";
+import { getLayerBeforeId, removeLayerIfPresent, removeSourceIfPresent } from "./mapStyleUtils";
 import type { BlockGroupFeature, BlockGroupFeatureCollection } from "./types";
 
 const DEMOGRAPHIC_SOURCE_ID = "demographic-block-groups";
 const DEMOGRAPHIC_LAYER_ID = "demographic-fill";
-const COLOR_SCALE = ["#ffffff", "#ede9fe", "#c4b5fd", "#7c3aed", "#4c1d95"] as const;
+const COLOR_SCALE = ["#161616", "#3a2417", "#6d3518", "#a4501f", "#e87c2e"] as const;
 
 type MetricKey = "over65" | "disability" | "lep" | "composite";
 
@@ -243,12 +244,7 @@ export function DemographicOverlay({ map }: DemographicOverlayProps) {
   }, [activeMetric, blockGroups, metricValues]);
 
   useEffect(() => {
-    if (map.getLayer(DEMOGRAPHIC_LAYER_ID)) {
-      map.removeLayer(DEMOGRAPHIC_LAYER_ID);
-    }
-    if (map.getSource(DEMOGRAPHIC_SOURCE_ID)) {
-      map.removeSource(DEMOGRAPHIC_SOURCE_ID);
-    }
+    removeDemographicLayer(map);
 
     if (overlayGeoJson === null) {
       return;
@@ -266,25 +262,18 @@ export function DemographicOverlay({ map }: DemographicOverlayProps) {
         source: DEMOGRAPHIC_SOURCE_ID,
         paint: {
           "fill-color": ["get", "fillColor"],
-          "fill-opacity": 0.4,
+          "fill-opacity": 0.25,
         },
       },
-      map.getLayer(DAMAGE_FILL_BEFORE_ID) ? DAMAGE_FILL_BEFORE_ID : undefined,
+      getLayerBeforeId(map, DAMAGE_FILL_BEFORE_ID),
     );
 
-    return () => {
-      if (map.getLayer(DEMOGRAPHIC_LAYER_ID)) {
-        map.removeLayer(DEMOGRAPHIC_LAYER_ID);
-      }
-      if (map.getSource(DEMOGRAPHIC_SOURCE_ID)) {
-        map.removeSource(DEMOGRAPHIC_SOURCE_ID);
-      }
-    };
+    return () => removeDemographicLayer(map);
   }, [map, overlayGeoJson]);
 
   return (
-    <div className="absolute top-4 left-4 z-10 max-w-sm rounded-xl border border-zinc-200 bg-white/95 p-3 shadow-lg backdrop-blur">
-      <p className="mb-2 text-xs font-semibold tracking-wide text-zinc-500 uppercase">
+    <div className="absolute top-4 left-4 z-10 max-w-sm rounded-[4px] border border-[var(--border-default)] bg-[rgba(15,15,15,0.92)] p-3 text-[var(--text-primary)] backdrop-blur">
+      <p className="mb-2 font-mono text-[10px] font-medium tracking-[0.2em] text-[var(--text-muted)] uppercase">
         Demographic overlay
       </p>
       <div className="flex flex-wrap gap-2">
@@ -292,10 +281,10 @@ export function DemographicOverlay({ map }: DemographicOverlayProps) {
           <button
             key={option.key}
             type="button"
-            className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+            className={`rounded-[3px] border px-3 py-1.5 font-mono text-[11px] font-normal transition-colors ${
               activeMetric === option.key
-                ? "border-purple-700 bg-purple-700 text-white"
-                : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
+                ? "border-[var(--accent)] bg-[var(--accent-dim)] text-[var(--accent)]"
+                : "border-[var(--border-default)] bg-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-elevated)]"
             }`}
             onClick={() =>
               setActiveMetric((current) => (current === option.key ? null : option.key))
@@ -306,9 +295,16 @@ export function DemographicOverlay({ map }: DemographicOverlayProps) {
         ))}
       </div>
       {activeMetric === null ? (
-        <p className="mt-2 text-xs text-zinc-500">Toggle off: base map only.</p>
+        <p className="mt-2 font-mono text-[10px] text-[var(--text-muted)]">
+          Toggle off: base map only.
+        </p>
       ) : null}
-      {error !== null ? <p className="mt-2 text-xs text-red-600">{error}</p> : null}
+      {error !== null ? <p className="mt-2 font-mono text-[10px] text-red-300">{error}</p> : null}
     </div>
   );
+}
+
+function removeDemographicLayer(map: MapLibreMap) {
+  removeLayerIfPresent(map, DEMOGRAPHIC_LAYER_ID);
+  removeSourceIfPresent(map, DEMOGRAPHIC_SOURCE_ID);
 }

@@ -61,6 +61,7 @@ export type Registrant = {
 export type RegistrantProperties = {
   id: string;
   contactStatus: ContactStatus;
+  selected: boolean;
 };
 
 export type RegistrantFeatureCollection = FeatureCollection<Point, RegistrantProperties>;
