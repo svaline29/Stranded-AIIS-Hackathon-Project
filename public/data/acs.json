@@ -1,0 +1,2028 @@
+{
+  "fetchedAt": "2026-05-02T17:02:27.824Z",
+  "acsYear": 2023,
+  "geography": "Buncombe County NC (state=37, county=021)",
+  "joinNote": "blockGroups[].geoid (12 chars) — first 11 chars match tracts[].geoid for BG→tract join",
+  "variables": {
+    "blockGroups": [
+      {
+        "field": "totalPop",
+        "source": "B01003_001E",
+        "label": "Total population"
+      },
+      {
+        "field": "numGE65",
+        "source": "B01001_020E–025E (male) + B01001_044E–049E (female)",
+        "label": "Population 65 years and over",
+        "note": "Derived by summing 6 male + 6 female age-bracket cells from B01001"
+      },
+      {
+        "field": "numDis",
+        "source": null,
+        "label": "Population with any disability",
+        "note": "Null at BG level — not published in ACS 5-year below tract. Join to tracts[] via geoid[:11]."
+      },
+      {
+        "field": "numLEP",
+        "source": "B16004 \"well\"+\"not well\"+\"not at all\" × 4 language groups × 3 age groups (36 cells)",
+        "label": "Population speaking English less than \"very well\""
+      },
+      {
+        "field": "numHHInd",
+        "source": "B11001_008E",
+        "label": "Nonfamily households: householder living alone"
+      }
+    ],
+    "tracts": [
+      {
+        "field": "totalPop",
+        "source": "B01003_001E",
+        "label": "Total population"
+      },
+      {
+        "field": "numDis",
+        "source": "B18101: sum of 'With a disability' rows — male (004,007,010,013,016,019) + female (023,026,029,032,035,038)",
+        "label": "Civilian noninstitutionalized population with any disability",
+        "note": "Verified non-null at tract level for all 65 Buncombe County tracts"
+      },
+      {
+        "field": "pctDis",
+        "source": "numDis / totalPop × 100 (rounded to 1 decimal)",
+        "label": "Percent with any disability"
+      }
+    ]
+  },
+  "blockGroupCount": 168,
+  "tractCount": 65,
+  "blockGroups": [
+    {
+      "geoid": "370210001001",
+      "name": "Block Group 1; Census Tract 1; Buncombe County; North Carolina",
+      "totalPop": 303,
+      "numGE65": 253,
+      "numDis": null,
+      "numLEP": 26,
+      "numHHInd": 236
+    },
+    {
+      "geoid": "370210001002",
+      "name": "Block Group 2; Census Tract 1; Buncombe County; North Carolina",
+      "totalPop": 887,
+      "numGE65": 110,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 192
+    },
+    {
+      "geoid": "370210002001",
+      "name": "Block Group 1; Census Tract 2; Buncombe County; North Carolina",
+      "totalPop": 763,
+      "numGE65": 252,
+      "numDis": null,
+      "numLEP": 7,
+      "numHHInd": 181
+    },
+    {
+      "geoid": "370210002002",
+      "name": "Block Group 2; Census Tract 2; Buncombe County; North Carolina",
+      "totalPop": 735,
+      "numGE65": 71,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 152
+    },
+    {
+      "geoid": "370210003001",
+      "name": "Block Group 1; Census Tract 3; Buncombe County; North Carolina",
+      "totalPop": 2017,
+      "numGE65": 159,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 200
+    },
+    {
+      "geoid": "370210003002",
+      "name": "Block Group 2; Census Tract 3; Buncombe County; North Carolina",
+      "totalPop": 478,
+      "numGE65": 103,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 120
+    },
+    {
+      "geoid": "370210004001",
+      "name": "Block Group 1; Census Tract 4; Buncombe County; North Carolina",
+      "totalPop": 2867,
+      "numGE65": 301,
+      "numDis": null,
+      "numLEP": 18,
+      "numHHInd": 255
+    },
+    {
+      "geoid": "370210004002",
+      "name": "Block Group 2; Census Tract 4; Buncombe County; North Carolina",
+      "totalPop": 543,
+      "numGE65": 100,
+      "numDis": null,
+      "numLEP": 34,
+      "numHHInd": 73
+    },
+    {
+      "geoid": "370210004003",
+      "name": "Block Group 3; Census Tract 4; Buncombe County; North Carolina",
+      "totalPop": 685,
+      "numGE65": 163,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 237
+    },
+    {
+      "geoid": "370210005001",
+      "name": "Block Group 1; Census Tract 5; Buncombe County; North Carolina",
+      "totalPop": 1240,
+      "numGE65": 507,
+      "numDis": null,
+      "numLEP": 9,
+      "numHHInd": 119
+    },
+    {
+      "geoid": "370210005002",
+      "name": "Block Group 2; Census Tract 5; Buncombe County; North Carolina",
+      "totalPop": 654,
+      "numGE65": 136,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 79
+    },
+    {
+      "geoid": "370210005003",
+      "name": "Block Group 3; Census Tract 5; Buncombe County; North Carolina",
+      "totalPop": 1831,
+      "numGE65": 576,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 274
+    },
+    {
+      "geoid": "370210006001",
+      "name": "Block Group 1; Census Tract 6; Buncombe County; North Carolina",
+      "totalPop": 626,
+      "numGE65": 169,
+      "numDis": null,
+      "numLEP": 28,
+      "numHHInd": 129
+    },
+    {
+      "geoid": "370210006002",
+      "name": "Block Group 2; Census Tract 6; Buncombe County; North Carolina",
+      "totalPop": 1121,
+      "numGE65": 192,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 202
+    },
+    {
+      "geoid": "370210007001",
+      "name": "Block Group 1; Census Tract 7; Buncombe County; North Carolina",
+      "totalPop": 1502,
+      "numGE65": 134,
+      "numDis": null,
+      "numLEP": 25,
+      "numHHInd": 447
+    },
+    {
+      "geoid": "370210008001",
+      "name": "Block Group 1; Census Tract 8; Buncombe County; North Carolina",
+      "totalPop": 1163,
+      "numGE65": 143,
+      "numDis": null,
+      "numLEP": 15,
+      "numHHInd": 63
+    },
+    {
+      "geoid": "370210008002",
+      "name": "Block Group 2; Census Tract 8; Buncombe County; North Carolina",
+      "totalPop": 1117,
+      "numGE65": 172,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 113
+    },
+    {
+      "geoid": "370210008003",
+      "name": "Block Group 3; Census Tract 8; Buncombe County; North Carolina",
+      "totalPop": 1030,
+      "numGE65": 221,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 132
+    },
+    {
+      "geoid": "370210009001",
+      "name": "Block Group 1; Census Tract 9; Buncombe County; North Carolina",
+      "totalPop": 805,
+      "numGE65": 154,
+      "numDis": null,
+      "numLEP": 9,
+      "numHHInd": 187
+    },
+    {
+      "geoid": "370210009002",
+      "name": "Block Group 2; Census Tract 9; Buncombe County; North Carolina",
+      "totalPop": 776,
+      "numGE65": 159,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 296
+    },
+    {
+      "geoid": "370210009003",
+      "name": "Block Group 3; Census Tract 9; Buncombe County; North Carolina",
+      "totalPop": 1206,
+      "numGE65": 307,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 220
+    },
+    {
+      "geoid": "370210010001",
+      "name": "Block Group 1; Census Tract 10; Buncombe County; North Carolina",
+      "totalPop": 2157,
+      "numGE65": 172,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 176
+    },
+    {
+      "geoid": "370210010002",
+      "name": "Block Group 2; Census Tract 10; Buncombe County; North Carolina",
+      "totalPop": 3053,
+      "numGE65": 211,
+      "numDis": null,
+      "numLEP": 173,
+      "numHHInd": 480
+    },
+    {
+      "geoid": "370210011001",
+      "name": "Block Group 1; Census Tract 11; Buncombe County; North Carolina",
+      "totalPop": 2106,
+      "numGE65": 327,
+      "numDis": null,
+      "numLEP": 11,
+      "numHHInd": 225
+    },
+    {
+      "geoid": "370210011002",
+      "name": "Block Group 2; Census Tract 11; Buncombe County; North Carolina",
+      "totalPop": 1900,
+      "numGE65": 238,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 200
+    },
+    {
+      "geoid": "370210011003",
+      "name": "Block Group 3; Census Tract 11; Buncombe County; North Carolina",
+      "totalPop": 1753,
+      "numGE65": 133,
+      "numDis": null,
+      "numLEP": 152,
+      "numHHInd": 161
+    },
+    {
+      "geoid": "370210012001",
+      "name": "Block Group 1; Census Tract 12; Buncombe County; North Carolina",
+      "totalPop": 716,
+      "numGE65": 279,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 217
+    },
+    {
+      "geoid": "370210012002",
+      "name": "Block Group 2; Census Tract 12; Buncombe County; North Carolina",
+      "totalPop": 476,
+      "numGE65": 75,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 83
+    },
+    {
+      "geoid": "370210012003",
+      "name": "Block Group 3; Census Tract 12; Buncombe County; North Carolina",
+      "totalPop": 677,
+      "numGE65": 131,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 94
+    },
+    {
+      "geoid": "370210012004",
+      "name": "Block Group 4; Census Tract 12; Buncombe County; North Carolina",
+      "totalPop": 1806,
+      "numGE65": 168,
+      "numDis": null,
+      "numLEP": 11,
+      "numHHInd": 284
+    },
+    {
+      "geoid": "370210012005",
+      "name": "Block Group 5; Census Tract 12; Buncombe County; North Carolina",
+      "totalPop": 859,
+      "numGE65": 53,
+      "numDis": null,
+      "numLEP": 20,
+      "numHHInd": 61
+    },
+    {
+      "geoid": "370210013001",
+      "name": "Block Group 1; Census Tract 13; Buncombe County; North Carolina",
+      "totalPop": 1563,
+      "numGE65": 189,
+      "numDis": null,
+      "numLEP": 62,
+      "numHHInd": 158
+    },
+    {
+      "geoid": "370210013002",
+      "name": "Block Group 2; Census Tract 13; Buncombe County; North Carolina",
+      "totalPop": 972,
+      "numGE65": 91,
+      "numDis": null,
+      "numLEP": 89,
+      "numHHInd": 89
+    },
+    {
+      "geoid": "370210013003",
+      "name": "Block Group 3; Census Tract 13; Buncombe County; North Carolina",
+      "totalPop": 1760,
+      "numGE65": 115,
+      "numDis": null,
+      "numLEP": 30,
+      "numHHInd": 127
+    },
+    {
+      "geoid": "370210014011",
+      "name": "Block Group 1; Census Tract 14.01; Buncombe County; North Carolina",
+      "totalPop": 1034,
+      "numGE65": 222,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 73
+    },
+    {
+      "geoid": "370210014012",
+      "name": "Block Group 2; Census Tract 14.01; Buncombe County; North Carolina",
+      "totalPop": 1234,
+      "numGE65": 92,
+      "numDis": null,
+      "numLEP": 102,
+      "numHHInd": 265
+    },
+    {
+      "geoid": "370210014013",
+      "name": "Block Group 3; Census Tract 14.01; Buncombe County; North Carolina",
+      "totalPop": 2019,
+      "numGE65": 354,
+      "numDis": null,
+      "numLEP": 261,
+      "numHHInd": 217
+    },
+    {
+      "geoid": "370210014021",
+      "name": "Block Group 1; Census Tract 14.02; Buncombe County; North Carolina",
+      "totalPop": 2572,
+      "numGE65": 474,
+      "numDis": null,
+      "numLEP": 366,
+      "numHHInd": 107
+    },
+    {
+      "geoid": "370210014022",
+      "name": "Block Group 2; Census Tract 14.02; Buncombe County; North Carolina",
+      "totalPop": 917,
+      "numGE65": 50,
+      "numDis": null,
+      "numLEP": 118,
+      "numHHInd": 218
+    },
+    {
+      "geoid": "370210015001",
+      "name": "Block Group 1; Census Tract 15; Buncombe County; North Carolina",
+      "totalPop": 1707,
+      "numGE65": 223,
+      "numDis": null,
+      "numLEP": 328,
+      "numHHInd": 259
+    },
+    {
+      "geoid": "370210015002",
+      "name": "Block Group 2; Census Tract 15; Buncombe County; North Carolina",
+      "totalPop": 1138,
+      "numGE65": 141,
+      "numDis": null,
+      "numLEP": 23,
+      "numHHInd": 143
+    },
+    {
+      "geoid": "370210016011",
+      "name": "Block Group 1; Census Tract 16.01; Buncombe County; North Carolina",
+      "totalPop": 1892,
+      "numGE65": 519,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 103
+    },
+    {
+      "geoid": "370210016012",
+      "name": "Block Group 2; Census Tract 16.01; Buncombe County; North Carolina",
+      "totalPop": 2397,
+      "numGE65": 393,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 337
+    },
+    {
+      "geoid": "370210016021",
+      "name": "Block Group 1; Census Tract 16.02; Buncombe County; North Carolina",
+      "totalPop": 1776,
+      "numGE65": 755,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 357
+    },
+    {
+      "geoid": "370210016022",
+      "name": "Block Group 2; Census Tract 16.02; Buncombe County; North Carolina",
+      "totalPop": 2051,
+      "numGE65": 356,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 235
+    },
+    {
+      "geoid": "370210017001",
+      "name": "Block Group 1; Census Tract 17; Buncombe County; North Carolina",
+      "totalPop": 1154,
+      "numGE65": 379,
+      "numDis": null,
+      "numLEP": 7,
+      "numHHInd": 134
+    },
+    {
+      "geoid": "370210017002",
+      "name": "Block Group 2; Census Tract 17; Buncombe County; North Carolina",
+      "totalPop": 1816,
+      "numGE65": 632,
+      "numDis": null,
+      "numLEP": 15,
+      "numHHInd": 262
+    },
+    {
+      "geoid": "370210018011",
+      "name": "Block Group 1; Census Tract 18.01; Buncombe County; North Carolina",
+      "totalPop": 1161,
+      "numGE65": 657,
+      "numDis": null,
+      "numLEP": 12,
+      "numHHInd": 436
+    },
+    {
+      "geoid": "370210018012",
+      "name": "Block Group 2; Census Tract 18.01; Buncombe County; North Carolina",
+      "totalPop": 2602,
+      "numGE65": 546,
+      "numDis": null,
+      "numLEP": 13,
+      "numHHInd": 357
+    },
+    {
+      "geoid": "370210018021",
+      "name": "Block Group 1; Census Tract 18.02; Buncombe County; North Carolina",
+      "totalPop": 2842,
+      "numGE65": 487,
+      "numDis": null,
+      "numLEP": 230,
+      "numHHInd": 375
+    },
+    {
+      "geoid": "370210018022",
+      "name": "Block Group 2; Census Tract 18.02; Buncombe County; North Carolina",
+      "totalPop": 2435,
+      "numGE65": 662,
+      "numDis": null,
+      "numLEP": 22,
+      "numHHInd": 172
+    },
+    {
+      "geoid": "370210019001",
+      "name": "Block Group 1; Census Tract 19; Buncombe County; North Carolina",
+      "totalPop": 2216,
+      "numGE65": 724,
+      "numDis": null,
+      "numLEP": 33,
+      "numHHInd": 658
+    },
+    {
+      "geoid": "370210019002",
+      "name": "Block Group 2; Census Tract 19; Buncombe County; North Carolina",
+      "totalPop": 1931,
+      "numGE65": 593,
+      "numDis": null,
+      "numLEP": 4,
+      "numHHInd": 376
+    },
+    {
+      "geoid": "370210020001",
+      "name": "Block Group 1; Census Tract 20; Buncombe County; North Carolina",
+      "totalPop": 2642,
+      "numGE65": 519,
+      "numDis": null,
+      "numLEP": 369,
+      "numHHInd": 675
+    },
+    {
+      "geoid": "370210020002",
+      "name": "Block Group 2; Census Tract 20; Buncombe County; North Carolina",
+      "totalPop": 1169,
+      "numGE65": 160,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 290
+    },
+    {
+      "geoid": "370210020003",
+      "name": "Block Group 3; Census Tract 20; Buncombe County; North Carolina",
+      "totalPop": 628,
+      "numGE65": 188,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 117
+    },
+    {
+      "geoid": "370210020004",
+      "name": "Block Group 4; Census Tract 20; Buncombe County; North Carolina",
+      "totalPop": 1904,
+      "numGE65": 299,
+      "numDis": null,
+      "numLEP": 305,
+      "numHHInd": 290
+    },
+    {
+      "geoid": "370210021011",
+      "name": "Block Group 1; Census Tract 21.01; Buncombe County; North Carolina",
+      "totalPop": 1471,
+      "numGE65": 450,
+      "numDis": null,
+      "numLEP": 6,
+      "numHHInd": 98
+    },
+    {
+      "geoid": "370210021021",
+      "name": "Block Group 1; Census Tract 21.02; Buncombe County; North Carolina",
+      "totalPop": 2781,
+      "numGE65": 474,
+      "numDis": null,
+      "numLEP": 22,
+      "numHHInd": 172
+    },
+    {
+      "geoid": "370210021022",
+      "name": "Block Group 2; Census Tract 21.02; Buncombe County; North Carolina",
+      "totalPop": 951,
+      "numGE65": 236,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 468
+    },
+    {
+      "geoid": "370210021023",
+      "name": "Block Group 3; Census Tract 21.02; Buncombe County; North Carolina",
+      "totalPop": 2033,
+      "numGE65": 111,
+      "numDis": null,
+      "numLEP": 706,
+      "numHHInd": 39
+    },
+    {
+      "geoid": "370210022031",
+      "name": "Block Group 1; Census Tract 22.03; Buncombe County; North Carolina",
+      "totalPop": 2619,
+      "numGE65": 179,
+      "numDis": null,
+      "numLEP": 918,
+      "numHHInd": 203
+    },
+    {
+      "geoid": "370210022032",
+      "name": "Block Group 2; Census Tract 22.03; Buncombe County; North Carolina",
+      "totalPop": 2354,
+      "numGE65": 239,
+      "numDis": null,
+      "numLEP": 200,
+      "numHHInd": 401
+    },
+    {
+      "geoid": "370210022033",
+      "name": "Block Group 3; Census Tract 22.03; Buncombe County; North Carolina",
+      "totalPop": 1566,
+      "numGE65": 354,
+      "numDis": null,
+      "numLEP": 245,
+      "numHHInd": 57
+    },
+    {
+      "geoid": "370210022041",
+      "name": "Block Group 1; Census Tract 22.04; Buncombe County; North Carolina",
+      "totalPop": 3836,
+      "numGE65": 858,
+      "numDis": null,
+      "numLEP": 64,
+      "numHHInd": 463
+    },
+    {
+      "geoid": "370210022042",
+      "name": "Block Group 2; Census Tract 22.04; Buncombe County; North Carolina",
+      "totalPop": 3900,
+      "numGE65": 1165,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 769
+    },
+    {
+      "geoid": "370210022043",
+      "name": "Block Group 3; Census Tract 22.04; Buncombe County; North Carolina",
+      "totalPop": 800,
+      "numGE65": 131,
+      "numDis": null,
+      "numLEP": 67,
+      "numHHInd": 219
+    },
+    {
+      "geoid": "370210022044",
+      "name": "Block Group 4; Census Tract 22.04; Buncombe County; North Carolina",
+      "totalPop": 670,
+      "numGE65": 231,
+      "numDis": null,
+      "numLEP": 23,
+      "numHHInd": 90
+    },
+    {
+      "geoid": "370210022051",
+      "name": "Block Group 1; Census Tract 22.05; Buncombe County; North Carolina",
+      "totalPop": 2988,
+      "numGE65": 565,
+      "numDis": null,
+      "numLEP": 85,
+      "numHHInd": 329
+    },
+    {
+      "geoid": "370210022052",
+      "name": "Block Group 2; Census Tract 22.05; Buncombe County; North Carolina",
+      "totalPop": 2541,
+      "numGE65": 327,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 252
+    },
+    {
+      "geoid": "370210022053",
+      "name": "Block Group 3; Census Tract 22.05; Buncombe County; North Carolina",
+      "totalPop": 1358,
+      "numGE65": 194,
+      "numDis": null,
+      "numLEP": 30,
+      "numHHInd": 213
+    },
+    {
+      "geoid": "370210022061",
+      "name": "Block Group 1; Census Tract 22.06; Buncombe County; North Carolina",
+      "totalPop": 2724,
+      "numGE65": 1137,
+      "numDis": null,
+      "numLEP": 63,
+      "numHHInd": 318
+    },
+    {
+      "geoid": "370210022062",
+      "name": "Block Group 2; Census Tract 22.06; Buncombe County; North Carolina",
+      "totalPop": 2894,
+      "numGE65": 558,
+      "numDis": null,
+      "numLEP": 19,
+      "numHHInd": 271
+    },
+    {
+      "geoid": "370210023031",
+      "name": "Block Group 1; Census Tract 23.03; Buncombe County; North Carolina",
+      "totalPop": 1559,
+      "numGE65": 289,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 13
+    },
+    {
+      "geoid": "370210023032",
+      "name": "Block Group 2; Census Tract 23.03; Buncombe County; North Carolina",
+      "totalPop": 1383,
+      "numGE65": 412,
+      "numDis": null,
+      "numLEP": 25,
+      "numHHInd": 298
+    },
+    {
+      "geoid": "370210023033",
+      "name": "Block Group 3; Census Tract 23.03; Buncombe County; North Carolina",
+      "totalPop": 2447,
+      "numGE65": 468,
+      "numDis": null,
+      "numLEP": 50,
+      "numHHInd": 323
+    },
+    {
+      "geoid": "370210023034",
+      "name": "Block Group 4; Census Tract 23.03; Buncombe County; North Carolina",
+      "totalPop": 1959,
+      "numGE65": 270,
+      "numDis": null,
+      "numLEP": 308,
+      "numHHInd": 49
+    },
+    {
+      "geoid": "370210023041",
+      "name": "Block Group 1; Census Tract 23.04; Buncombe County; North Carolina",
+      "totalPop": 1561,
+      "numGE65": 369,
+      "numDis": null,
+      "numLEP": 37,
+      "numHHInd": 28
+    },
+    {
+      "geoid": "370210023051",
+      "name": "Block Group 1; Census Tract 23.05; Buncombe County; North Carolina",
+      "totalPop": 2045,
+      "numGE65": 531,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 187
+    },
+    {
+      "geoid": "370210023052",
+      "name": "Block Group 2; Census Tract 23.05; Buncombe County; North Carolina",
+      "totalPop": 3625,
+      "numGE65": 842,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 511
+    },
+    {
+      "geoid": "370210023061",
+      "name": "Block Group 1; Census Tract 23.06; Buncombe County; North Carolina",
+      "totalPop": 2295,
+      "numGE65": 606,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 557
+    },
+    {
+      "geoid": "370210023062",
+      "name": "Block Group 2; Census Tract 23.06; Buncombe County; North Carolina",
+      "totalPop": 1670,
+      "numGE65": 177,
+      "numDis": null,
+      "numLEP": 141,
+      "numHHInd": 271
+    },
+    {
+      "geoid": "370210024011",
+      "name": "Block Group 1; Census Tract 24.01; Buncombe County; North Carolina",
+      "totalPop": 1010,
+      "numGE65": 203,
+      "numDis": null,
+      "numLEP": 7,
+      "numHHInd": 22
+    },
+    {
+      "geoid": "370210024012",
+      "name": "Block Group 2; Census Tract 24.01; Buncombe County; North Carolina",
+      "totalPop": 2591,
+      "numGE65": 308,
+      "numDis": null,
+      "numLEP": 404,
+      "numHHInd": 273
+    },
+    {
+      "geoid": "370210024021",
+      "name": "Block Group 1; Census Tract 24.02; Buncombe County; North Carolina",
+      "totalPop": 3011,
+      "numGE65": 421,
+      "numDis": null,
+      "numLEP": 215,
+      "numHHInd": 415
+    },
+    {
+      "geoid": "370210024022",
+      "name": "Block Group 2; Census Tract 24.02; Buncombe County; North Carolina",
+      "totalPop": 1317,
+      "numGE65": 284,
+      "numDis": null,
+      "numLEP": 211,
+      "numHHInd": 200
+    },
+    {
+      "geoid": "370210024023",
+      "name": "Block Group 3; Census Tract 24.02; Buncombe County; North Carolina",
+      "totalPop": 1136,
+      "numGE65": 269,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 76
+    },
+    {
+      "geoid": "370210025031",
+      "name": "Block Group 1; Census Tract 25.03; Buncombe County; North Carolina",
+      "totalPop": 2310,
+      "numGE65": 268,
+      "numDis": null,
+      "numLEP": 273,
+      "numHHInd": 110
+    },
+    {
+      "geoid": "370210025032",
+      "name": "Block Group 2; Census Tract 25.03; Buncombe County; North Carolina",
+      "totalPop": 1689,
+      "numGE65": 418,
+      "numDis": null,
+      "numLEP": 64,
+      "numHHInd": 267
+    },
+    {
+      "geoid": "370210025033",
+      "name": "Block Group 3; Census Tract 25.03; Buncombe County; North Carolina",
+      "totalPop": 989,
+      "numGE65": 139,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 27
+    },
+    {
+      "geoid": "370210025041",
+      "name": "Block Group 1; Census Tract 25.04; Buncombe County; North Carolina",
+      "totalPop": 2886,
+      "numGE65": 437,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 241
+    },
+    {
+      "geoid": "370210025042",
+      "name": "Block Group 2; Census Tract 25.04; Buncombe County; North Carolina",
+      "totalPop": 875,
+      "numGE65": 428,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 65
+    },
+    {
+      "geoid": "370210025043",
+      "name": "Block Group 3; Census Tract 25.04; Buncombe County; North Carolina",
+      "totalPop": 1610,
+      "numGE65": 258,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 31
+    },
+    {
+      "geoid": "370210025051",
+      "name": "Block Group 1; Census Tract 25.05; Buncombe County; North Carolina",
+      "totalPop": 2874,
+      "numGE65": 778,
+      "numDis": null,
+      "numLEP": 41,
+      "numHHInd": 294
+    },
+    {
+      "geoid": "370210025052",
+      "name": "Block Group 2; Census Tract 25.05; Buncombe County; North Carolina",
+      "totalPop": 1103,
+      "numGE65": 240,
+      "numDis": null,
+      "numLEP": 25,
+      "numHHInd": 89
+    },
+    {
+      "geoid": "370210025053",
+      "name": "Block Group 3; Census Tract 25.05; Buncombe County; North Carolina",
+      "totalPop": 2202,
+      "numGE65": 410,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 83
+    },
+    {
+      "geoid": "370210025061",
+      "name": "Block Group 1; Census Tract 25.06; Buncombe County; North Carolina",
+      "totalPop": 1759,
+      "numGE65": 170,
+      "numDis": null,
+      "numLEP": 146,
+      "numHHInd": 130
+    },
+    {
+      "geoid": "370210025062",
+      "name": "Block Group 2; Census Tract 25.06; Buncombe County; North Carolina",
+      "totalPop": 1090,
+      "numGE65": 177,
+      "numDis": null,
+      "numLEP": 31,
+      "numHHInd": 245
+    },
+    {
+      "geoid": "370210025063",
+      "name": "Block Group 3; Census Tract 25.06; Buncombe County; North Carolina",
+      "totalPop": 809,
+      "numGE65": 70,
+      "numDis": null,
+      "numLEP": 175,
+      "numHHInd": 26
+    },
+    {
+      "geoid": "370210026031",
+      "name": "Block Group 1; Census Tract 26.03; Buncombe County; North Carolina",
+      "totalPop": 2144,
+      "numGE65": 501,
+      "numDis": null,
+      "numLEP": 2,
+      "numHHInd": 244
+    },
+    {
+      "geoid": "370210026032",
+      "name": "Block Group 2; Census Tract 26.03; Buncombe County; North Carolina",
+      "totalPop": 1392,
+      "numGE65": 243,
+      "numDis": null,
+      "numLEP": 2,
+      "numHHInd": 86
+    },
+    {
+      "geoid": "370210026041",
+      "name": "Block Group 1; Census Tract 26.04; Buncombe County; North Carolina",
+      "totalPop": 1645,
+      "numGE65": 202,
+      "numDis": null,
+      "numLEP": 13,
+      "numHHInd": 52
+    },
+    {
+      "geoid": "370210026042",
+      "name": "Block Group 2; Census Tract 26.04; Buncombe County; North Carolina",
+      "totalPop": 1468,
+      "numGE65": 309,
+      "numDis": null,
+      "numLEP": 10,
+      "numHHInd": 170
+    },
+    {
+      "geoid": "370210026043",
+      "name": "Block Group 3; Census Tract 26.04; Buncombe County; North Carolina",
+      "totalPop": 1551,
+      "numGE65": 205,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 84
+    },
+    {
+      "geoid": "370210026044",
+      "name": "Block Group 4; Census Tract 26.04; Buncombe County; North Carolina",
+      "totalPop": 2007,
+      "numGE65": 318,
+      "numDis": null,
+      "numLEP": 41,
+      "numHHInd": 43
+    },
+    {
+      "geoid": "370210026061",
+      "name": "Block Group 1; Census Tract 26.06; Buncombe County; North Carolina",
+      "totalPop": 2723,
+      "numGE65": 175,
+      "numDis": null,
+      "numLEP": 175,
+      "numHHInd": 20
+    },
+    {
+      "geoid": "370210026062",
+      "name": "Block Group 2; Census Tract 26.06; Buncombe County; North Carolina",
+      "totalPop": 1292,
+      "numGE65": 252,
+      "numDis": null,
+      "numLEP": 12,
+      "numHHInd": 108
+    },
+    {
+      "geoid": "370210026063",
+      "name": "Block Group 3; Census Tract 26.06; Buncombe County; North Carolina",
+      "totalPop": 2374,
+      "numGE65": 331,
+      "numDis": null,
+      "numLEP": 372,
+      "numHHInd": 159
+    },
+    {
+      "geoid": "370210026071",
+      "name": "Block Group 1; Census Tract 26.07; Buncombe County; North Carolina",
+      "totalPop": 1687,
+      "numGE65": 262,
+      "numDis": null,
+      "numLEP": 84,
+      "numHHInd": 106
+    },
+    {
+      "geoid": "370210026072",
+      "name": "Block Group 2; Census Tract 26.07; Buncombe County; North Carolina",
+      "totalPop": 1766,
+      "numGE65": 389,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 170
+    },
+    {
+      "geoid": "370210026073",
+      "name": "Block Group 3; Census Tract 26.07; Buncombe County; North Carolina",
+      "totalPop": 1088,
+      "numGE65": 185,
+      "numDis": null,
+      "numLEP": 12,
+      "numHHInd": 68
+    },
+    {
+      "geoid": "370210026081",
+      "name": "Block Group 1; Census Tract 26.08; Buncombe County; North Carolina",
+      "totalPop": 557,
+      "numGE65": 98,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 14
+    },
+    {
+      "geoid": "370210026082",
+      "name": "Block Group 2; Census Tract 26.08; Buncombe County; North Carolina",
+      "totalPop": 598,
+      "numGE65": 116,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 99
+    },
+    {
+      "geoid": "370210026083",
+      "name": "Block Group 3; Census Tract 26.08; Buncombe County; North Carolina",
+      "totalPop": 832,
+      "numGE65": 104,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 193
+    },
+    {
+      "geoid": "370210026084",
+      "name": "Block Group 4; Census Tract 26.08; Buncombe County; North Carolina",
+      "totalPop": 1123,
+      "numGE65": 158,
+      "numDis": null,
+      "numLEP": 121,
+      "numHHInd": 75
+    },
+    {
+      "geoid": "370210026085",
+      "name": "Block Group 5; Census Tract 26.08; Buncombe County; North Carolina",
+      "totalPop": 1383,
+      "numGE65": 100,
+      "numDis": null,
+      "numLEP": 110,
+      "numHHInd": 125
+    },
+    {
+      "geoid": "370210026091",
+      "name": "Block Group 1; Census Tract 26.09; Buncombe County; North Carolina",
+      "totalPop": 1671,
+      "numGE65": 294,
+      "numDis": null,
+      "numLEP": 378,
+      "numHHInd": 38
+    },
+    {
+      "geoid": "370210027011",
+      "name": "Block Group 1; Census Tract 27.01; Buncombe County; North Carolina",
+      "totalPop": 2074,
+      "numGE65": 338,
+      "numDis": null,
+      "numLEP": 162,
+      "numHHInd": 166
+    },
+    {
+      "geoid": "370210027012",
+      "name": "Block Group 2; Census Tract 27.01; Buncombe County; North Carolina",
+      "totalPop": 1491,
+      "numGE65": 459,
+      "numDis": null,
+      "numLEP": 36,
+      "numHHInd": 227
+    },
+    {
+      "geoid": "370210027013",
+      "name": "Block Group 3; Census Tract 27.01; Buncombe County; North Carolina",
+      "totalPop": 873,
+      "numGE65": 16,
+      "numDis": null,
+      "numLEP": 7,
+      "numHHInd": 12
+    },
+    {
+      "geoid": "370210027021",
+      "name": "Block Group 1; Census Tract 27.02; Buncombe County; North Carolina",
+      "totalPop": 2397,
+      "numGE65": 471,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 227
+    },
+    {
+      "geoid": "370210027022",
+      "name": "Block Group 2; Census Tract 27.02; Buncombe County; North Carolina",
+      "totalPop": 825,
+      "numGE65": 157,
+      "numDis": null,
+      "numLEP": 30,
+      "numHHInd": 109
+    },
+    {
+      "geoid": "370210027023",
+      "name": "Block Group 3; Census Tract 27.02; Buncombe County; North Carolina",
+      "totalPop": 1941,
+      "numGE65": 569,
+      "numDis": null,
+      "numLEP": 6,
+      "numHHInd": 139
+    },
+    {
+      "geoid": "370210027041",
+      "name": "Block Group 1; Census Tract 27.04; Buncombe County; North Carolina",
+      "totalPop": 661,
+      "numGE65": 258,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 109
+    },
+    {
+      "geoid": "370210027042",
+      "name": "Block Group 2; Census Tract 27.04; Buncombe County; North Carolina",
+      "totalPop": 1719,
+      "numGE65": 581,
+      "numDis": null,
+      "numLEP": 90,
+      "numHHInd": 202
+    },
+    {
+      "geoid": "370210027043",
+      "name": "Block Group 3; Census Tract 27.04; Buncombe County; North Carolina",
+      "totalPop": 667,
+      "numGE65": 197,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 32
+    },
+    {
+      "geoid": "370210027044",
+      "name": "Block Group 4; Census Tract 27.04; Buncombe County; North Carolina",
+      "totalPop": 1480,
+      "numGE65": 483,
+      "numDis": null,
+      "numLEP": 12,
+      "numHHInd": 74
+    },
+    {
+      "geoid": "370210027051",
+      "name": "Block Group 1; Census Tract 27.05; Buncombe County; North Carolina",
+      "totalPop": 1247,
+      "numGE65": 390,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 116
+    },
+    {
+      "geoid": "370210028031",
+      "name": "Block Group 1; Census Tract 28.03; Buncombe County; North Carolina",
+      "totalPop": 761,
+      "numGE65": 89,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 125
+    },
+    {
+      "geoid": "370210028032",
+      "name": "Block Group 2; Census Tract 28.03; Buncombe County; North Carolina",
+      "totalPop": 1116,
+      "numGE65": 235,
+      "numDis": null,
+      "numLEP": 14,
+      "numHHInd": 32
+    },
+    {
+      "geoid": "370210028033",
+      "name": "Block Group 3; Census Tract 28.03; Buncombe County; North Carolina",
+      "totalPop": 3224,
+      "numGE65": 378,
+      "numDis": null,
+      "numLEP": 662,
+      "numHHInd": 158
+    },
+    {
+      "geoid": "370210028041",
+      "name": "Block Group 1; Census Tract 28.04; Buncombe County; North Carolina",
+      "totalPop": 1135,
+      "numGE65": 243,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 60
+    },
+    {
+      "geoid": "370210028042",
+      "name": "Block Group 2; Census Tract 28.04; Buncombe County; North Carolina",
+      "totalPop": 1736,
+      "numGE65": 442,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 110
+    },
+    {
+      "geoid": "370210028043",
+      "name": "Block Group 3; Census Tract 28.04; Buncombe County; North Carolina",
+      "totalPop": 2135,
+      "numGE65": 700,
+      "numDis": null,
+      "numLEP": 17,
+      "numHHInd": 332
+    },
+    {
+      "geoid": "370210029001",
+      "name": "Block Group 1; Census Tract 29; Buncombe County; North Carolina",
+      "totalPop": 2257,
+      "numGE65": 664,
+      "numDis": null,
+      "numLEP": 85,
+      "numHHInd": 200
+    },
+    {
+      "geoid": "370210029002",
+      "name": "Block Group 2; Census Tract 29; Buncombe County; North Carolina",
+      "totalPop": 840,
+      "numGE65": 134,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 16
+    },
+    {
+      "geoid": "370210029003",
+      "name": "Block Group 3; Census Tract 29; Buncombe County; North Carolina",
+      "totalPop": 995,
+      "numGE65": 388,
+      "numDis": null,
+      "numLEP": 25,
+      "numHHInd": 280
+    },
+    {
+      "geoid": "370210030021",
+      "name": "Block Group 1; Census Tract 30.02; Buncombe County; North Carolina",
+      "totalPop": 1040,
+      "numGE65": 298,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 70
+    },
+    {
+      "geoid": "370210030022",
+      "name": "Block Group 2; Census Tract 30.02; Buncombe County; North Carolina",
+      "totalPop": 778,
+      "numGE65": 102,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 106
+    },
+    {
+      "geoid": "370210030023",
+      "name": "Block Group 3; Census Tract 30.02; Buncombe County; North Carolina",
+      "totalPop": 504,
+      "numGE65": 130,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 60
+    },
+    {
+      "geoid": "370210030024",
+      "name": "Block Group 4; Census Tract 30.02; Buncombe County; North Carolina",
+      "totalPop": 6825,
+      "numGE65": 1122,
+      "numDis": null,
+      "numLEP": 399,
+      "numHHInd": 160
+    },
+    {
+      "geoid": "370210030031",
+      "name": "Block Group 1; Census Tract 30.03; Buncombe County; North Carolina",
+      "totalPop": 2226,
+      "numGE65": 348,
+      "numDis": null,
+      "numLEP": 46,
+      "numHHInd": 232
+    },
+    {
+      "geoid": "370210030032",
+      "name": "Block Group 2; Census Tract 30.03; Buncombe County; North Carolina",
+      "totalPop": 2206,
+      "numGE65": 420,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 242
+    },
+    {
+      "geoid": "370210030033",
+      "name": "Block Group 3; Census Tract 30.03; Buncombe County; North Carolina",
+      "totalPop": 1074,
+      "numGE65": 488,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 634
+    },
+    {
+      "geoid": "370210030041",
+      "name": "Block Group 1; Census Tract 30.04; Buncombe County; North Carolina",
+      "totalPop": 843,
+      "numGE65": 236,
+      "numDis": null,
+      "numLEP": 1,
+      "numHHInd": 92
+    },
+    {
+      "geoid": "370210030042",
+      "name": "Block Group 2; Census Tract 30.04; Buncombe County; North Carolina",
+      "totalPop": 1876,
+      "numGE65": 442,
+      "numDis": null,
+      "numLEP": 8,
+      "numHHInd": 190
+    },
+    {
+      "geoid": "370210031031",
+      "name": "Block Group 1; Census Tract 31.03; Buncombe County; North Carolina",
+      "totalPop": 2111,
+      "numGE65": 500,
+      "numDis": null,
+      "numLEP": 53,
+      "numHHInd": 177
+    },
+    {
+      "geoid": "370210031051",
+      "name": "Block Group 1; Census Tract 31.05; Buncombe County; North Carolina",
+      "totalPop": 982,
+      "numGE65": 183,
+      "numDis": null,
+      "numLEP": 25,
+      "numHHInd": 131
+    },
+    {
+      "geoid": "370210031052",
+      "name": "Block Group 2; Census Tract 31.05; Buncombe County; North Carolina",
+      "totalPop": 1079,
+      "numGE65": 266,
+      "numDis": null,
+      "numLEP": 10,
+      "numHHInd": 79
+    },
+    {
+      "geoid": "370210031053",
+      "name": "Block Group 3; Census Tract 31.05; Buncombe County; North Carolina",
+      "totalPop": 1361,
+      "numGE65": 480,
+      "numDis": null,
+      "numLEP": 10,
+      "numHHInd": 128
+    },
+    {
+      "geoid": "370210031061",
+      "name": "Block Group 1; Census Tract 31.06; Buncombe County; North Carolina",
+      "totalPop": 1308,
+      "numGE65": 337,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 79
+    },
+    {
+      "geoid": "370210031071",
+      "name": "Block Group 1; Census Tract 31.07; Buncombe County; North Carolina",
+      "totalPop": 1885,
+      "numGE65": 698,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 146
+    },
+    {
+      "geoid": "370210031072",
+      "name": "Block Group 2; Census Tract 31.07; Buncombe County; North Carolina",
+      "totalPop": 411,
+      "numGE65": 44,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 28
+    },
+    {
+      "geoid": "370210031073",
+      "name": "Block Group 3; Census Tract 31.07; Buncombe County; North Carolina",
+      "totalPop": 662,
+      "numGE65": 273,
+      "numDis": null,
+      "numLEP": 2,
+      "numHHInd": 125
+    },
+    {
+      "geoid": "370210031074",
+      "name": "Block Group 4; Census Tract 31.07; Buncombe County; North Carolina",
+      "totalPop": 1078,
+      "numGE65": 382,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 202
+    },
+    {
+      "geoid": "370210031081",
+      "name": "Block Group 1; Census Tract 31.08; Buncombe County; North Carolina",
+      "totalPop": 1967,
+      "numGE65": 1276,
+      "numDis": null,
+      "numLEP": 13,
+      "numHHInd": 636
+    },
+    {
+      "geoid": "370210032011",
+      "name": "Block Group 1; Census Tract 32.01; Buncombe County; North Carolina",
+      "totalPop": 1867,
+      "numGE65": 568,
+      "numDis": null,
+      "numLEP": 47,
+      "numHHInd": 179
+    },
+    {
+      "geoid": "370210032021",
+      "name": "Block Group 1; Census Tract 32.02; Buncombe County; North Carolina",
+      "totalPop": 1015,
+      "numGE65": 284,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 168
+    },
+    {
+      "geoid": "370210032022",
+      "name": "Block Group 2; Census Tract 32.02; Buncombe County; North Carolina",
+      "totalPop": 733,
+      "numGE65": 230,
+      "numDis": null,
+      "numLEP": 8,
+      "numHHInd": 55
+    },
+    {
+      "geoid": "370210032023",
+      "name": "Block Group 3; Census Tract 32.02; Buncombe County; North Carolina",
+      "totalPop": 1661,
+      "numGE65": 375,
+      "numDis": null,
+      "numLEP": 45,
+      "numHHInd": 108
+    },
+    {
+      "geoid": "370210032024",
+      "name": "Block Group 4; Census Tract 32.02; Buncombe County; North Carolina",
+      "totalPop": 551,
+      "numGE65": 185,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 40
+    },
+    {
+      "geoid": "370210032031",
+      "name": "Block Group 1; Census Tract 32.03; Buncombe County; North Carolina",
+      "totalPop": 1131,
+      "numGE65": 485,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 9
+    },
+    {
+      "geoid": "370210032032",
+      "name": "Block Group 2; Census Tract 32.03; Buncombe County; North Carolina",
+      "totalPop": 628,
+      "numGE65": 114,
+      "numDis": null,
+      "numLEP": 79,
+      "numHHInd": 53
+    },
+    {
+      "geoid": "370210032033",
+      "name": "Block Group 3; Census Tract 32.03; Buncombe County; North Carolina",
+      "totalPop": 4825,
+      "numGE65": 773,
+      "numDis": null,
+      "numLEP": 292,
+      "numHHInd": 339
+    },
+    {
+      "geoid": "370210032041",
+      "name": "Block Group 1; Census Tract 32.04; Buncombe County; North Carolina",
+      "totalPop": 1409,
+      "numGE65": 450,
+      "numDis": null,
+      "numLEP": 16,
+      "numHHInd": 220
+    },
+    {
+      "geoid": "370210032042",
+      "name": "Block Group 2; Census Tract 32.04; Buncombe County; North Carolina",
+      "totalPop": 1260,
+      "numGE65": 366,
+      "numDis": null,
+      "numLEP": 0,
+      "numHHInd": 116
+    },
+    {
+      "geoid": "370210032043",
+      "name": "Block Group 3; Census Tract 32.04; Buncombe County; North Carolina",
+      "totalPop": 1637,
+      "numGE65": 389,
+      "numDis": null,
+      "numLEP": 23,
+      "numHHInd": 84
+    },
+    {
+      "geoid": "370210032051",
+      "name": "Block Group 1; Census Tract 32.05; Buncombe County; North Carolina",
+      "totalPop": 1307,
+      "numGE65": 454,
+      "numDis": null,
+      "numLEP": 4,
+      "numHHInd": 287
+    }
+  ],
+  "tracts": [
+    {
+      "geoid": "37021000100",
+      "name": "Census Tract 1; Buncombe County; North Carolina",
+      "totalPop": 1190,
+      "numDis": 220,
+      "pctDis": 18.5
+    },
+    {
+      "geoid": "37021000200",
+      "name": "Census Tract 2; Buncombe County; North Carolina",
+      "totalPop": 1498,
+      "numDis": 183,
+      "pctDis": 12.2
+    },
+    {
+      "geoid": "37021000300",
+      "name": "Census Tract 3; Buncombe County; North Carolina",
+      "totalPop": 2495,
+      "numDis": 239,
+      "pctDis": 9.6
+    },
+    {
+      "geoid": "37021000400",
+      "name": "Census Tract 4; Buncombe County; North Carolina",
+      "totalPop": 4095,
+      "numDis": 633,
+      "pctDis": 15.5
+    },
+    {
+      "geoid": "37021000500",
+      "name": "Census Tract 5; Buncombe County; North Carolina",
+      "totalPop": 3725,
+      "numDis": 322,
+      "pctDis": 8.6
+    },
+    {
+      "geoid": "37021000600",
+      "name": "Census Tract 6; Buncombe County; North Carolina",
+      "totalPop": 1747,
+      "numDis": 166,
+      "pctDis": 9.5
+    },
+    {
+      "geoid": "37021000700",
+      "name": "Census Tract 7; Buncombe County; North Carolina",
+      "totalPop": 1502,
+      "numDis": 142,
+      "pctDis": 9.5
+    },
+    {
+      "geoid": "37021000800",
+      "name": "Census Tract 8; Buncombe County; North Carolina",
+      "totalPop": 3310,
+      "numDis": 343,
+      "pctDis": 10.4
+    },
+    {
+      "geoid": "37021000900",
+      "name": "Census Tract 9; Buncombe County; North Carolina",
+      "totalPop": 2787,
+      "numDis": 670,
+      "pctDis": 24
+    },
+    {
+      "geoid": "37021001000",
+      "name": "Census Tract 10; Buncombe County; North Carolina",
+      "totalPop": 5210,
+      "numDis": 816,
+      "pctDis": 15.7
+    },
+    {
+      "geoid": "37021001100",
+      "name": "Census Tract 11; Buncombe County; North Carolina",
+      "totalPop": 5759,
+      "numDis": 637,
+      "pctDis": 11.1
+    },
+    {
+      "geoid": "37021001200",
+      "name": "Census Tract 12; Buncombe County; North Carolina",
+      "totalPop": 4534,
+      "numDis": 457,
+      "pctDis": 10.1
+    },
+    {
+      "geoid": "37021001300",
+      "name": "Census Tract 13; Buncombe County; North Carolina",
+      "totalPop": 4295,
+      "numDis": 449,
+      "pctDis": 10.5
+    },
+    {
+      "geoid": "37021001401",
+      "name": "Census Tract 14.01; Buncombe County; North Carolina",
+      "totalPop": 4287,
+      "numDis": 439,
+      "pctDis": 10.2
+    },
+    {
+      "geoid": "37021001402",
+      "name": "Census Tract 14.02; Buncombe County; North Carolina",
+      "totalPop": 3489,
+      "numDis": 778,
+      "pctDis": 22.3
+    },
+    {
+      "geoid": "37021001500",
+      "name": "Census Tract 15; Buncombe County; North Carolina",
+      "totalPop": 2845,
+      "numDis": 528,
+      "pctDis": 18.6
+    },
+    {
+      "geoid": "37021001601",
+      "name": "Census Tract 16.01; Buncombe County; North Carolina",
+      "totalPop": 4289,
+      "numDis": 361,
+      "pctDis": 8.4
+    },
+    {
+      "geoid": "37021001602",
+      "name": "Census Tract 16.02; Buncombe County; North Carolina",
+      "totalPop": 3827,
+      "numDis": 465,
+      "pctDis": 12.2
+    },
+    {
+      "geoid": "37021001700",
+      "name": "Census Tract 17; Buncombe County; North Carolina",
+      "totalPop": 2970,
+      "numDis": 228,
+      "pctDis": 7.7
+    },
+    {
+      "geoid": "37021001801",
+      "name": "Census Tract 18.01; Buncombe County; North Carolina",
+      "totalPop": 3763,
+      "numDis": 452,
+      "pctDis": 12
+    },
+    {
+      "geoid": "37021001802",
+      "name": "Census Tract 18.02; Buncombe County; North Carolina",
+      "totalPop": 5277,
+      "numDis": 591,
+      "pctDis": 11.2
+    },
+    {
+      "geoid": "37021001900",
+      "name": "Census Tract 19; Buncombe County; North Carolina",
+      "totalPop": 4147,
+      "numDis": 522,
+      "pctDis": 12.6
+    },
+    {
+      "geoid": "37021002000",
+      "name": "Census Tract 20; Buncombe County; North Carolina",
+      "totalPop": 6343,
+      "numDis": 1024,
+      "pctDis": 16.1
+    },
+    {
+      "geoid": "37021002101",
+      "name": "Census Tract 21.01; Buncombe County; North Carolina",
+      "totalPop": 1471,
+      "numDis": 103,
+      "pctDis": 7
+    },
+    {
+      "geoid": "37021002102",
+      "name": "Census Tract 21.02; Buncombe County; North Carolina",
+      "totalPop": 5765,
+      "numDis": 611,
+      "pctDis": 10.6
+    },
+    {
+      "geoid": "37021002203",
+      "name": "Census Tract 22.03; Buncombe County; North Carolina",
+      "totalPop": 6539,
+      "numDis": 822,
+      "pctDis": 12.6
+    },
+    {
+      "geoid": "37021002204",
+      "name": "Census Tract 22.04; Buncombe County; North Carolina",
+      "totalPop": 9206,
+      "numDis": 1523,
+      "pctDis": 16.5
+    },
+    {
+      "geoid": "37021002205",
+      "name": "Census Tract 22.05; Buncombe County; North Carolina",
+      "totalPop": 6887,
+      "numDis": 624,
+      "pctDis": 9.1
+    },
+    {
+      "geoid": "37021002206",
+      "name": "Census Tract 22.06; Buncombe County; North Carolina",
+      "totalPop": 5618,
+      "numDis": 891,
+      "pctDis": 15.9
+    },
+    {
+      "geoid": "37021002303",
+      "name": "Census Tract 23.03; Buncombe County; North Carolina",
+      "totalPop": 7348,
+      "numDis": 1069,
+      "pctDis": 14.5
+    },
+    {
+      "geoid": "37021002304",
+      "name": "Census Tract 23.04; Buncombe County; North Carolina",
+      "totalPop": 1561,
+      "numDis": 234,
+      "pctDis": 15
+    },
+    {
+      "geoid": "37021002305",
+      "name": "Census Tract 23.05; Buncombe County; North Carolina",
+      "totalPop": 5670,
+      "numDis": 447,
+      "pctDis": 7.9
+    },
+    {
+      "geoid": "37021002306",
+      "name": "Census Tract 23.06; Buncombe County; North Carolina",
+      "totalPop": 3965,
+      "numDis": 559,
+      "pctDis": 14.1
+    },
+    {
+      "geoid": "37021002401",
+      "name": "Census Tract 24.01; Buncombe County; North Carolina",
+      "totalPop": 3601,
+      "numDis": 554,
+      "pctDis": 15.4
+    },
+    {
+      "geoid": "37021002402",
+      "name": "Census Tract 24.02; Buncombe County; North Carolina",
+      "totalPop": 5464,
+      "numDis": 524,
+      "pctDis": 9.6
+    },
+    {
+      "geoid": "37021002503",
+      "name": "Census Tract 25.03; Buncombe County; North Carolina",
+      "totalPop": 4988,
+      "numDis": 566,
+      "pctDis": 11.3
+    },
+    {
+      "geoid": "37021002504",
+      "name": "Census Tract 25.04; Buncombe County; North Carolina",
+      "totalPop": 5371,
+      "numDis": 691,
+      "pctDis": 12.9
+    },
+    {
+      "geoid": "37021002505",
+      "name": "Census Tract 25.05; Buncombe County; North Carolina",
+      "totalPop": 6179,
+      "numDis": 1349,
+      "pctDis": 21.8
+    },
+    {
+      "geoid": "37021002506",
+      "name": "Census Tract 25.06; Buncombe County; North Carolina",
+      "totalPop": 3658,
+      "numDis": 547,
+      "pctDis": 15
+    },
+    {
+      "geoid": "37021002603",
+      "name": "Census Tract 26.03; Buncombe County; North Carolina",
+      "totalPop": 3536,
+      "numDis": 693,
+      "pctDis": 19.6
+    },
+    {
+      "geoid": "37021002604",
+      "name": "Census Tract 26.04; Buncombe County; North Carolina",
+      "totalPop": 6671,
+      "numDis": 649,
+      "pctDis": 9.7
+    },
+    {
+      "geoid": "37021002606",
+      "name": "Census Tract 26.06; Buncombe County; North Carolina",
+      "totalPop": 6389,
+      "numDis": 773,
+      "pctDis": 12.1
+    },
+    {
+      "geoid": "37021002607",
+      "name": "Census Tract 26.07; Buncombe County; North Carolina",
+      "totalPop": 4541,
+      "numDis": 530,
+      "pctDis": 11.7
+    },
+    {
+      "geoid": "37021002608",
+      "name": "Census Tract 26.08; Buncombe County; North Carolina",
+      "totalPop": 4493,
+      "numDis": 413,
+      "pctDis": 9.2
+    },
+    {
+      "geoid": "37021002609",
+      "name": "Census Tract 26.09; Buncombe County; North Carolina",
+      "totalPop": 1671,
+      "numDis": 192,
+      "pctDis": 11.5
+    },
+    {
+      "geoid": "37021002701",
+      "name": "Census Tract 27.01; Buncombe County; North Carolina",
+      "totalPop": 4438,
+      "numDis": 545,
+      "pctDis": 12.3
+    },
+    {
+      "geoid": "37021002702",
+      "name": "Census Tract 27.02; Buncombe County; North Carolina",
+      "totalPop": 5163,
+      "numDis": 532,
+      "pctDis": 10.3
+    },
+    {
+      "geoid": "37021002704",
+      "name": "Census Tract 27.04; Buncombe County; North Carolina",
+      "totalPop": 4527,
+      "numDis": 502,
+      "pctDis": 11.1
+    },
+    {
+      "geoid": "37021002705",
+      "name": "Census Tract 27.05; Buncombe County; North Carolina",
+      "totalPop": 1247,
+      "numDis": 182,
+      "pctDis": 14.6
+    },
+    {
+      "geoid": "37021002803",
+      "name": "Census Tract 28.03; Buncombe County; North Carolina",
+      "totalPop": 5101,
+      "numDis": 844,
+      "pctDis": 16.5
+    },
+    {
+      "geoid": "37021002804",
+      "name": "Census Tract 28.04; Buncombe County; North Carolina",
+      "totalPop": 5006,
+      "numDis": 1002,
+      "pctDis": 20
+    },
+    {
+      "geoid": "37021002900",
+      "name": "Census Tract 29; Buncombe County; North Carolina",
+      "totalPop": 4092,
+      "numDis": 732,
+      "pctDis": 17.9
+    },
+    {
+      "geoid": "37021003002",
+      "name": "Census Tract 30.02; Buncombe County; North Carolina",
+      "totalPop": 9147,
+      "numDis": 2031,
+      "pctDis": 22.2
+    },
+    {
+      "geoid": "37021003003",
+      "name": "Census Tract 30.03; Buncombe County; North Carolina",
+      "totalPop": 5506,
+      "numDis": 945,
+      "pctDis": 17.2
+    },
+    {
+      "geoid": "37021003004",
+      "name": "Census Tract 30.04; Buncombe County; North Carolina",
+      "totalPop": 2719,
+      "numDis": 258,
+      "pctDis": 9.5
+    },
+    {
+      "geoid": "37021003103",
+      "name": "Census Tract 31.03; Buncombe County; North Carolina",
+      "totalPop": 2111,
+      "numDis": 336,
+      "pctDis": 15.9
+    },
+    {
+      "geoid": "37021003105",
+      "name": "Census Tract 31.05; Buncombe County; North Carolina",
+      "totalPop": 3422,
+      "numDis": 920,
+      "pctDis": 26.9
+    },
+    {
+      "geoid": "37021003106",
+      "name": "Census Tract 31.06; Buncombe County; North Carolina",
+      "totalPop": 1308,
+      "numDis": 150,
+      "pctDis": 11.5
+    },
+    {
+      "geoid": "37021003107",
+      "name": "Census Tract 31.07; Buncombe County; North Carolina",
+      "totalPop": 4036,
+      "numDis": 518,
+      "pctDis": 12.8
+    },
+    {
+      "geoid": "37021003108",
+      "name": "Census Tract 31.08; Buncombe County; North Carolina",
+      "totalPop": 1967,
+      "numDis": 686,
+      "pctDis": 34.9
+    },
+    {
+      "geoid": "37021003201",
+      "name": "Census Tract 32.01; Buncombe County; North Carolina",
+      "totalPop": 1867,
+      "numDis": 161,
+      "pctDis": 8.6
+    },
+    {
+      "geoid": "37021003202",
+      "name": "Census Tract 32.02; Buncombe County; North Carolina",
+      "totalPop": 3960,
+      "numDis": 560,
+      "pctDis": 14.1
+    },
+    {
+      "geoid": "37021003203",
+      "name": "Census Tract 32.03; Buncombe County; North Carolina",
+      "totalPop": 6584,
+      "numDis": 394,
+      "pctDis": 6
+    },
+    {
+      "geoid": "37021003204",
+      "name": "Census Tract 32.04; Buncombe County; North Carolina",
+      "totalPop": 4306,
+      "numDis": 491,
+      "pctDis": 11.4
+    },
+    {
+      "geoid": "37021003205",
+      "name": "Census Tract 32.05; Buncombe County; North Carolina",
+      "totalPop": 1307,
+      "numDis": 268,
+      "pctDis": 20.5
+    }
+  ]
+}

@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Stranded
 
-## Getting Started
+> AI-powered disaster response triage for vulnerable populations.
 
-First, run the development server:
+When disasters strike, standard response systems assume people can self-evacuate, call 911, hike out, or be reported by neighbors. Disabled, elderly, and isolated residents are systematically missed. Stranded helps responders find and prioritize them in real time.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**Status:** In development (hackathon build).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## What it does (planned)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Pre-disaster: vulnerable individuals or caregivers register their dependencies (oxygen, mobility, dialysis, language, etc.)
+- During disaster: AI analyzes damage from satellite/aerial imagery, scores each registrant by combined damage × dependency × time-since-contact, and produces natural-language dispatch briefings for responders
+- Stretch: AI voice agents proactively call registrants to confirm safety and escalate non-responders
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Tech stack
 
-## Learn More
+Next.js 14 (App Router, TypeScript) · Tailwind · shadcn/ui · MapLibre GL JS · SQLite + Drizzle · Anthropic Claude (Sonnet 4.5) · Vapi (voice) · US Census ACS
 
-To learn more about Next.js, take a look at the following resources:
+## Data sources
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- US Census American Community Survey (5-year estimates)
+- NOAA Emergency Response Imagery (Hurricane Helene, Sept 2024)
+- Maxar Open Data (pre-event baseline)
+- OpenStreetMap (via MapLibre + Nominatim)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Local development
 
-## Deploy on Vercel
+Coming soon — see SPEC.md for the build plan.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+TBD
+
+## Sources & inspiration
+
+See `notes/sources.md`.
