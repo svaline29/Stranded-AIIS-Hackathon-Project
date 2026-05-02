@@ -117,7 +117,7 @@ P3/P4 require manual trigger.
 ## Local Development
  
 ```bash
-git clone https://github.com/svalin29/stranded
+git clone https://github.com/svaline29/Stranded-AIIS-Hackthon-Project
 cd stranded
 pnpm install
 cp .env.local.example .env.local
