@@ -55,6 +55,19 @@ export const dispatchBriefings = sqliteTable("dispatch_briefings", {
     .references(() => registrants.id),
   riskScore: real("risk_score").notNull(),
   briefing: text("briefing").notNull(), // natural language
+  accessNotes: text("access_notes"),
+  priorityAction: text("priority_action").notNull().default(""),
+  priorityTier: text("priority_tier", { enum: ["P1", "P2", "P3", "P4"] })
+    .notNull()
+    .default("P4"),
+  primaryConcern: text("primary_concern").notNull().default(""),
+  immediateRisks: text("immediate_risks").notNull().default("[]"), // JSON array
+  timeSensitivity: text("time_sensitivity", {
+    enum: ["hours", "days", "weeks", "none"],
+  })
+    .notNull()
+    .default("none"),
+  confidence: real("confidence").notNull().default(0),
   resourceTags: text("resource_tags").notNull().default("[]"), // JSON array
   generatedAt: integer("generated_at").notNull(),
 });

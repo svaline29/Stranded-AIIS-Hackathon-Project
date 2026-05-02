@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { DispatchBriefing } from "@/components/dashboard/DispatchBriefing";
 import { PriorityList } from "@/components/dashboard/PriorityList";
 import { StatsBar } from "@/components/dashboard/StatsBar";
+import type { TriageBriefingResult, TriageBriefingState } from "@/components/dashboard/triageTypes";
 import {
   formatDependencyLabel,
   formatSeverityLabel,
+  getPriorityTier,
   loadDashboardData,
   type DashboardData,
   type EnrichedRegistrant,
@@ -21,11 +22,15 @@ type LoadState =
   | { status: "error"; message: string };
 
 const EMPTY_ENRICHED_REGISTRANTS: EnrichedRegistrant[] = [];
+const TRIAGE_CACHE_TTL_MS = 10 * 60 * 1000;
 
 export function DashboardShell() {
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
   const [selectedRegistrantId, setSelectedRegistrantId] = useState<string | null>(null);
   const [disasterModeActive, setDisasterModeActive] = useState(false);
+  const [triageByRegistrantId, setTriageByRegistrantId] = useState<
+    Record<string, TriageBriefingState>
+  >({});
 
   useEffect(() => {
     let cancelled = false;
@@ -61,6 +66,94 @@ export function DashboardShell() {
       enrichedRegistrants.find((registrant) => registrant.id === selectedRegistrantId) ?? null,
     [enrichedRegistrants, selectedRegistrantId],
   );
+  const selectedTriageState = getVisibleTriageState(
+    selectedRegistrant,
+    selectedRegistrantId === null ? undefined : triageByRegistrantId[selectedRegistrantId],
+  );
+
+  const loadTriageBriefing = useCallback(async (registrantId: string) => {
+    try {
+      const response = await fetch("/api/triage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ registrantId }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to generate triage briefing");
+      }
+
+      const result = (await response.json()) as TriageBriefingResult;
+      setTriageByRegistrantId((current) => {
+        return {
+          ...current,
+          [registrantId]: { status: "ready", result },
+        };
+      });
+    } catch (caught) {
+      setTriageByRegistrantId((current) => ({
+        ...current,
+        [registrantId]: {
+          status: "error",
+          message: caught instanceof Error ? caught.message : "Unable to generate triage briefing",
+        },
+      }));
+    }
+  }, []);
+
+  const requestTriageBriefing = useCallback(
+    (registrantId: string, options?: { forceClientRefresh?: boolean }) => {
+      const currentState = triageByRegistrantId[registrantId];
+      if (currentState?.status === "loading") {
+        return;
+      }
+      if (
+        options?.forceClientRefresh !== true &&
+        currentState?.status === "ready" &&
+        Date.now() - currentState.result.generatedAt < TRIAGE_CACHE_TTL_MS
+      ) {
+        return;
+      }
+
+      setTriageByRegistrantId((current) => ({
+        ...current,
+        [registrantId]: { status: "loading", showEstimate: true },
+      }));
+
+      window.setTimeout(() => {
+        setTriageByRegistrantId((current) => {
+          const latest = current[registrantId];
+
+          if (latest?.status !== "loading") {
+            return current;
+          }
+
+          return {
+            ...current,
+            [registrantId]: { status: "loading", showEstimate: false },
+          };
+        });
+      }, 2200);
+
+      void loadTriageBriefing(registrantId);
+    },
+    [loadTriageBriefing, triageByRegistrantId],
+  );
+
+  useEffect(() => {
+    if (
+      selectedRegistrant === null ||
+      (selectedRegistrant.priorityTier !== "P1" && selectedRegistrant.priorityTier !== "P2")
+    ) {
+      return;
+    }
+
+    requestTriageBriefing(selectedRegistrant.id);
+  }, [requestTriageBriefing, selectedRegistrant]);
+
+  function handleSelectRegistrant(registrantId: string) {
+    setSelectedRegistrantId(registrantId);
+  }
 
   return (
     <main className="flex min-h-screen flex-col bg-[var(--bg-base)]">
@@ -113,20 +206,24 @@ export function DashboardShell() {
           <PriorityList
             registrants={enrichedRegistrants}
             selectedRegistrantId={selectedRegistrantId}
-            onSelectRegistrant={setSelectedRegistrantId}
+            onSelectRegistrant={handleSelectRegistrant}
           />
           <div className="min-w-0 flex-1">
             <DashboardMapLoader
               damage={loadState.data.damage}
               registrants={loadState.data.registrants}
               selectedRegistrantId={selectedRegistrantId}
-              onSelectRegistrant={setSelectedRegistrantId}
+              onSelectRegistrant={handleSelectRegistrant}
             />
           </div>
           {selectedRegistrant !== null ? (
             <RegistrantPanel
               registrant={selectedRegistrant}
-              onClose={() => setSelectedRegistrantId(null)}
+              triageState={selectedTriageState}
+              onGenerateBriefing={() => requestTriageBriefing(selectedRegistrant.id)}
+              onRegenerateBriefing={() =>
+                requestTriageBriefing(selectedRegistrant.id, { forceClientRefresh: true })
+              }
             />
           ) : null}
         </section>
@@ -137,64 +234,39 @@ export function DashboardShell() {
 
 function RegistrantPanel({
   registrant,
-  onClose,
+  triageState,
+  onGenerateBriefing,
+  onRegenerateBriefing,
 }: {
   registrant: EnrichedRegistrant;
-  onClose: () => void;
+  triageState: TriageBriefingState;
+  onGenerateBriefing: () => void;
+  onRegenerateBriefing: () => void;
 }) {
-  return (
-    <aside className="panel-slide-in h-full w-80 shrink-0 overflow-y-auto border-l border-[#1e1e1e] bg-[#0f0f0f] p-5">
-      <div className="mb-5 flex items-start justify-between gap-4">
-        <div>
-          <p className="mb-2 font-mono text-[10px] font-medium tracking-[0.2em] text-[var(--text-muted)] uppercase">
-            Synthetic registrant for demonstration
-          </p>
-          <h2 className="font-sans text-lg font-semibold text-[var(--text-primary)]">
-            {registrant.fullName}
-          </h2>
-          <p className="font-sans text-xs text-[var(--text-muted)]">
-            Age {registrant.age ?? "unknown"}
-          </p>
-        </div>
-        <Button
-          type="button"
-          size="sm"
-          variant="outline"
-          className="rounded-[3px] border border-[var(--border-default)] bg-transparent px-2.5 py-1 font-mono text-[11px] text-[var(--text-primary)] transition-[border-color] duration-100 hover:border-[var(--border-strong)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
-          onClick={onClose}
-        >
-          Close
-        </Button>
-      </div>
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
+  const panelRef = useRef<HTMLElement | null>(null);
 
-      <dl className="mb-5 space-y-0 text-sm">
-        <div className="border-t border-[var(--border-subtle)] py-4">
-          <dt className="font-mono text-[10px] font-medium tracking-[0.2em] text-[var(--text-muted)] uppercase">
-            Address
-          </dt>
-          <dd className="mt-2 font-sans text-sm text-[var(--text-primary)]">{registrant.address}</dd>
-        </div>
-        <div className="border-t border-[var(--border-subtle)] py-4">
-          <dt className="font-mono text-[10px] font-medium tracking-[0.2em] text-[var(--text-muted)] uppercase">
-            Dependencies
-          </dt>
-          <dd className="mt-2 flex flex-wrap gap-2">
-            {registrant.dependencies.map((dependency) => (
-              <Badge
-                key={dependency}
-                variant="outline"
-                className="rounded-[3px] border border-[#282828] bg-[#161616] px-2 py-0.5 font-mono text-[10px] font-normal text-[#999999]"
-              >
-                {formatDependencyLabel(dependency)}
-              </Badge>
-            ))}
-          </dd>
-        </div>
-        <div className="border-t border-[var(--border-subtle)] py-4">
-          <dt className="font-mono text-[10px] font-medium tracking-[0.2em] text-[var(--text-muted)] uppercase">
-            Damage severity
-          </dt>
-          <dd className="mt-2">
+  useLayoutEffect(() => {
+    if (panelRef.current !== null) {
+      panelRef.current.scrollTop = 0;
+    }
+    setDetailsExpanded(false);
+  }, [registrant.id]);
+
+  return (
+    <aside
+      ref={panelRef}
+      className="panel-slide-in h-full w-80 shrink-0 overflow-y-auto border-l border-[#1e1e1e] bg-[#0f0f0f] p-5"
+    >
+      <div className="mb-5 border-b border-[var(--border-subtle)] pb-3">
+        <div className="mb-3 flex items-start justify-between gap-4">
+          <h2 className="min-w-0 font-sans text-[18px] font-semibold text-[var(--text-primary)]">
+            {registrant.fullName}
+            <span className="ml-1 font-normal text-[var(--text-muted)]">
+              · {registrant.age ?? "unknown"}
+            </span>
+          </h2>
+          <div className="flex shrink-0 items-center gap-2">
             <Badge
               variant="outline"
               className="rounded-[3px] border bg-transparent px-2 py-0.5 font-mono text-[10px] font-normal uppercase"
@@ -202,52 +274,120 @@ function RegistrantPanel({
             >
               {formatSeverityLabel(registrant.damageSeverity)}
             </Badge>
-          </dd>
-        </div>
-        <div className="border-t border-[var(--border-subtle)] py-4">
-          <dt className="font-mono text-[10px] font-medium tracking-[0.2em] text-[var(--text-muted)] uppercase">
-            Risk score
-          </dt>
-          <dd className="mt-1 font-mono text-[22px] leading-7 font-semibold text-[var(--text-primary)]">
-            {registrant.riskScore.toFixed(1)}
-          </dd>
-        </div>
-        <div className="border-t border-[var(--border-subtle)] py-4">
-          <dt className="font-mono text-[10px] font-medium tracking-[0.2em] text-[var(--text-muted)] uppercase">
-            Contact status
-          </dt>
-          <dd className="mt-2">
             <Badge
               variant="outline"
-              className="rounded-[3px] border border-[#282828] bg-[#161616] px-2 py-0.5 font-mono text-[10px] font-normal text-[#999999] uppercase"
+              className="rounded-[3px] border bg-transparent px-2 py-0.5 font-mono text-[10px] font-normal"
+              style={getPriorityStyles(registrant.priorityTier)}
             >
-              {formatStatusLabel(registrant.contactStatus)}
+              {registrant.priorityTier}
             </Badge>
-          </dd>
-        </div>
-        <div className="border-t border-[var(--border-subtle)] py-4">
-          <dt className="font-mono text-[10px] font-medium tracking-[0.2em] text-[var(--text-muted)] uppercase">
-            Primary language
-          </dt>
-          <dd className="mt-1 font-sans text-sm text-[var(--text-primary)]">
-            {registrant.primaryLanguage}
-          </dd>
-        </div>
-        {registrant.caregiverPhone !== null ? (
-          <div className="border-t border-[var(--border-subtle)] py-4">
-            <dt className="font-mono text-[10px] font-medium tracking-[0.2em] text-[var(--text-muted)] uppercase">
-              Caregiver phone
-            </dt>
-            <dd className="mt-1 font-sans text-sm text-[var(--text-primary)]">
-              {registrant.caregiverPhone}
-            </dd>
           </div>
-        ) : null}
-      </dl>
+        </div>
+        <p className="font-mono text-[10px] font-medium tracking-[0.2em] text-[var(--text-muted)] uppercase">
+          Synthetic registrant for demonstration
+        </p>
+      </div>
 
-      <DispatchBriefing registrant={registrant} />
+      <DispatchBriefing
+        registrant={registrant}
+        triageState={triageState}
+      />
+
+      <div className="mt-5 border-t border-[var(--border-subtle)] pt-4">
+        <button
+          type="button"
+          className="font-mono text-[11px] text-[var(--text-muted)] uppercase transition-colors hover:text-[var(--text-secondary)]"
+          onClick={() => setDetailsExpanded((current) => !current)}
+        >
+          Registrant Details {detailsExpanded ? "▾" : "▸"}
+        </button>
+        <div
+          className={[
+            "overflow-hidden transition-[max-height] duration-200 ease-in-out",
+            detailsExpanded ? "max-h-[520px]" : "max-h-0",
+          ].join(" ")}
+        >
+          <dl className="mt-3 space-y-3 font-sans text-xs text-[var(--text-secondary)]">
+            <DetailRow label="Address" value={registrant.address} />
+            <DetailRow label="Phone" value={registrant.contactPhone} />
+            <div>
+              <dt className="text-[var(--text-muted)]">Dependencies</dt>
+              <dd className="mt-1 flex flex-wrap gap-2">
+                {registrant.dependencies.map((dependency) => (
+                  <Badge
+                    key={dependency}
+                    variant="outline"
+                    className="rounded-[3px] border border-[#282828] bg-[#161616] px-2 py-0.5 font-mono text-[10px] font-normal text-[#999999]"
+                  >
+                    {formatDependencyLabel(dependency)}
+                  </Badge>
+                ))}
+              </dd>
+            </div>
+            <DetailRow label="Language" value={registrant.primaryLanguage} />
+            {registrant.caregiverPhone !== null ? (
+              <DetailRow label="Caregiver phone" value={registrant.caregiverPhone} />
+            ) : null}
+            <DetailRow label="Registered via" value={formatStatusLabel(registrant.registeredVia)} />
+          </dl>
+        </div>
+      </div>
+
+      {triageState.status !== "ready" && triageState.status !== "loading" ? (
+        <button
+          type="button"
+          className="mt-5 w-full rounded-[3px] border border-[var(--accent)] bg-[var(--accent-dim)] px-3 py-2.5 font-mono text-xs tracking-wide text-[var(--accent)] uppercase transition-colors hover:bg-[rgba(232,124,46,0.18)]"
+          onClick={onGenerateBriefing}
+        >
+          Generate Briefing
+        </button>
+      ) : null}
+
+      {triageState.status === "ready" ? (
+        <button
+          type="button"
+          className="mt-5 font-mono text-[10px] tracking-wide text-[var(--text-muted)] uppercase transition-colors hover:text-[var(--text-secondary)]"
+          onClick={onRegenerateBriefing}
+        >
+          Regenerate
+        </button>
+      ) : null}
+
     </aside>
   );
+}
+
+function DetailRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-[var(--text-muted)]">{label}</dt>
+      <dd className="mt-0.5 text-[var(--text-secondary)]">{value}</dd>
+    </div>
+  );
+}
+
+function getVisibleTriageState(
+  registrant: EnrichedRegistrant | null,
+  cachedState: TriageBriefingState | undefined,
+): TriageBriefingState {
+  if (registrant === null) {
+    return { status: "idle" };
+  }
+
+  const derivedPriorityTier = getPriorityTier(registrant.riskScore);
+  const existingBriefing =
+    cachedState?.status === "ready" &&
+    Date.now() - cachedState.result.generatedAt < TRIAGE_CACHE_TTL_MS;
+
+  if (existingBriefing || cachedState?.status === "loading" || cachedState?.status === "error") {
+    return cachedState;
+  }
+
+  if (derivedPriorityTier === "P1" || derivedPriorityTier === "P2") {
+    return { status: "loading", showEstimate: true };
+  }
+
+  return cachedState ?? { status: "idle" };
 }
 
 function formatStatusLabel(value: string): string {
@@ -283,4 +423,21 @@ function getSeverityStyles(severity: EnrichedRegistrant["damageSeverity"]) {
     borderColor: "rgba(64, 64, 64, 0.6)",
     color: "#404040",
   };
+}
+
+function getPriorityStyles(priorityTier: EnrichedRegistrant["priorityTier"]) {
+  if (priorityTier === "P1") {
+    return {
+      borderColor: "rgba(232, 124, 46, 0.8)",
+      color: "var(--accent)",
+      textShadow: "0 0 8px rgba(232, 124, 46, 0.3)",
+    };
+  }
+  if (priorityTier === "P2") {
+    return { borderColor: "rgba(249, 115, 22, 0.6)", color: "#f97316" };
+  }
+  if (priorityTier === "P3") {
+    return { borderColor: "rgba(234, 179, 8, 0.6)", color: "#eab308" };
+  }
+  return { borderColor: "rgba(64, 64, 64, 0.7)", color: "#777777" };
 }
