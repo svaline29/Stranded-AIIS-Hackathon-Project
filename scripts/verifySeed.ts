@@ -3,6 +3,8 @@ import { getDb } from "../lib/db/client";
 import { damagePolygons, disasterState, registrants } from "../lib/db/schema";
 
 const EXPECTED_REGISTRANT_COUNT = 15;
+const EXPECTED_DAMAGE_POLYGON_COUNT = 10;
+const EXPECTED_DISASTER_STATE_COUNT = 1;
 
 async function tableCount(
   table: typeof disasterState | typeof damagePolygons | typeof registrants,
@@ -29,6 +31,18 @@ async function main(): Promise<void> {
   console.log(`damage_polygons: ${damagePolygonCount}`);
   console.log(`registrants: ${registrantCount}`);
   console.log(`registrants_missing_block_group: ${registrantsMissingBlockGroup.length}`);
+
+  if (disasterStateCount !== EXPECTED_DISASTER_STATE_COUNT) {
+    throw new Error(
+      `Expected ${EXPECTED_DISASTER_STATE_COUNT} disaster_state rows; found ${disasterStateCount}`,
+    );
+  }
+
+  if (damagePolygonCount !== EXPECTED_DAMAGE_POLYGON_COUNT) {
+    throw new Error(
+      `Expected ${EXPECTED_DAMAGE_POLYGON_COUNT} damage_polygons; found ${damagePolygonCount}`,
+    );
+  }
 
   if (registrantCount !== EXPECTED_REGISTRANT_COUNT) {
     throw new Error(

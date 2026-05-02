@@ -4,9 +4,17 @@ import { migrate } from 'drizzle-orm/libsql/migrator'
 import path from 'path'
 
 async function main() {
-  const client = createClient({
-    url: `file:${path.join(process.cwd(), 'stranded.db')}`,
-  })
+  const isRemote = !!process.env.TURSO_DATABASE_URL
+
+  const client = isRemote
+    ? createClient({
+        url: process.env.TURSO_DATABASE_URL!,
+        authToken: process.env.TURSO_AUTH_TOKEN!,
+      })
+    : createClient({
+        url: `file:${path.join(process.cwd(), 'stranded.db')}`,
+      })
+
   const db = drizzle(client)
   await migrate(db, { migrationsFolder: './drizzle' })
   console.log('Migrations applied successfully.')

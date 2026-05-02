@@ -14,8 +14,8 @@ const BBOX_GEOJSON = JSON.stringify({
   ],
 });
 
-export function seedDisasterState(): void {
-  getDb()
+export async function seedDisasterState(): Promise<void> {
+  await getDb()
     .insert(disasterState)
     .values({
       id: 1,
@@ -30,8 +30,7 @@ export function seedDisasterState(): void {
         scenarioName: "Hurricane Helene — Asheville/Swannanoa, September 2024",
         bboxGeoJSON: BBOX_GEOJSON,
       },
-    })
-    .run();
+    });
 
   console.log("✓ disaster_state seeded (id=1)");
 }

@@ -359,7 +359,7 @@ export const syntheticRegistrants: SeedRegistrant[] = syntheticRegistrantInputs.
   blockGroup: findBlockGroup(registrant.lat, registrant.lon),
 }));
 
-export function seedRegistrants(): void {
+export async function seedRegistrants(): Promise<void> {
   const unmatchedRegistrants = syntheticRegistrants.filter(
     (registrant) => registrant.blockGroup === null,
   );
@@ -370,10 +370,10 @@ export function seedRegistrants(): void {
     );
   }
 
-  getDb().delete(registrants).run();
+  await getDb().delete(registrants);
 
   for (const registrant of syntheticRegistrants) {
-    getDb()
+    await getDb()
       .insert(registrants)
       .values({
         id: registrant.id,
@@ -412,8 +412,7 @@ export function seedRegistrants(): void {
           contactStatus: registrant.contactStatus,
           contactNotes: null,
         },
-      })
-      .run();
+      });
   }
 
   console.log(`✓ registrants seeded (${syntheticRegistrants.length} synthetic)`);

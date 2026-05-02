@@ -114,11 +114,11 @@ function loadDamagePolygons(): SeedDamagePolygon[] {
 // Real polygons traced from neighborhood-level knowledge of Hurricane Helene damage in Asheville/Swannanoa, Sept 2024. See notes/sources.md.
 export const manualDamagePolygons: SeedDamagePolygon[] = loadDamagePolygons();
 
-export function seedDamagePolygons(): void {
-  getDb().delete(damagePolygons).run();
+export async function seedDamagePolygons(): Promise<void> {
+  await getDb().delete(damagePolygons);
 
   for (const polygon of manualDamagePolygons) {
-    getDb()
+    await getDb()
       .insert(damagePolygons)
       .values({
         id: polygon.id,
@@ -137,8 +137,7 @@ export function seedDamagePolygons(): void {
           detectedAt: SEEDED_AT,
           notes: polygon.notes,
         },
-      })
-      .run();
+      });
   }
 
   console.log(`✓ damage_polygons seeded (${manualDamagePolygons.length} manual)`);
