@@ -10,7 +10,7 @@ tsconfig.tsbuildinfo
 .env
 
 # Database
-*.db
+#*.db
 *.db-journal
 *.db-shm
 *.db-wal
