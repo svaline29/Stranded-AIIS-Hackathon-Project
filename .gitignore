@@ -1,11 +1,27 @@
+# Dependencies
 node_modules/
+
+# Next.js
 .next/
+tsconfig.tsbuildinfo
+
+# Environment
 .env.local
 .env
+
+# Database
 *.db
 *.db-journal
+*.db-shm
+*.db-wal
+
+# OS
 .DS_Store
+
+# Imagery (large files — download via scripts/fetchImagery.ts)
 /public/imagery/pre/*.png
 /public/imagery/post/*.png
 !/public/imagery/manifest.json
-node_modules
+
+# Build artifacts
+*.tsbuildinfo
