@@ -25,4 +25,4 @@ export function getDb(): DbClient {
 }
 
 // Keep default export for backward compatibility
-export default getDb()
+//export default getDb()
