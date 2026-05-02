@@ -28,7 +28,6 @@ const TRIAGE_CACHE_TTL_MS = 10 * 60 * 1000;
 export function DashboardShell() {
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
   const [selectedRegistrantId, setSelectedRegistrantId] = useState<string | null>(null);
-  const [disasterModeActive, setDisasterModeActive] = useState(false);
   const [triageByRegistrantId, setTriageByRegistrantId] = useState<
     Record<string, TriageBriefingState>
   >({});
@@ -174,18 +173,6 @@ export function DashboardShell() {
           </p>
         </div>
         <StatsBar registrants={enrichedRegistrants} />
-        <button
-          type="button"
-          className={[
-            "justify-self-end rounded-[999px] border px-4 py-2 font-mono text-[11px] tracking-wide uppercase transition-colors",
-            disasterModeActive
-              ? "disaster-pulse border-[var(--accent)] bg-[var(--accent-dim)] text-[var(--accent)]"
-              : "border-[var(--border-default)] bg-transparent text-[var(--text-muted)]",
-          ].join(" ")}
-          onClick={() => setDisasterModeActive((current) => !current)}
-        >
-          Disaster Mode: {disasterModeActive ? "ON" : "OFF"}
-        </button>
       </nav>
 
       {loadState.status === "loading" ? (
@@ -244,16 +231,18 @@ function RegistrantPanel({
   onGenerateBriefing: () => void;
   onRegenerateBriefing: () => void;
 }) {
-  const [detailsExpanded, setDetailsExpanded] = useState(false);
-  const [fullBriefingOpen, setFullBriefingOpen] = useState(false);
+  const [detailsExpandedRegistrantId, setDetailsExpandedRegistrantId] = useState<string | null>(
+    null,
+  );
+  const [fullBriefingRegistrantId, setFullBriefingRegistrantId] = useState<string | null>(null);
   const panelRef = useRef<HTMLElement | null>(null);
+  const detailsExpanded = detailsExpandedRegistrantId === registrant.id;
+  const fullBriefingOpen = fullBriefingRegistrantId === registrant.id;
 
   useLayoutEffect(() => {
     if (panelRef.current !== null) {
       panelRef.current.scrollTop = 0;
     }
-    setDetailsExpanded(false);
-    setFullBriefingOpen(false);
   }, [registrant.id]);
 
   return (
@@ -301,16 +290,17 @@ function RegistrantPanel({
           <button
             type="button"
             className="mt-5 w-full rounded-[3px] border border-[var(--accent)] bg-transparent px-3 py-2.5 font-mono text-[11px] tracking-wide text-[var(--accent)] uppercase transition-colors hover:bg-[var(--accent-dim)]"
-            onClick={() => setFullBriefingOpen(true)}
+            onClick={() => setFullBriefingRegistrantId(registrant.id)}
           >
             OPEN FULL BRIEFING ↗
           </button>
-          <FullBriefingOverlay
-            registrant={registrant}
-            result={triageState.result}
-            isOpen={fullBriefingOpen}
-            onClose={() => setFullBriefingOpen(false)}
-          />
+          {fullBriefingOpen ? (
+            <FullBriefingOverlay
+              registrant={registrant}
+              result={triageState.result}
+              onClose={() => setFullBriefingRegistrantId(null)}
+            />
+          ) : null}
         </>
       ) : null}
 
@@ -318,7 +308,7 @@ function RegistrantPanel({
         <button
           type="button"
           className="font-mono text-[11px] text-[var(--text-muted)] uppercase transition-colors hover:text-[var(--text-secondary)]"
-          onClick={() => setDetailsExpanded((current) => !current)}
+          onClick={() => setDetailsExpandedRegistrantId(detailsExpanded ? null : registrant.id)}
         >
           Registrant Details {detailsExpanded ? "▾" : "▸"}
         </button>
@@ -359,22 +349,16 @@ function RegistrantPanel({
 function FullBriefingOverlay({
   registrant,
   result,
-  isOpen,
   onClose,
 }: {
   registrant: EnrichedRegistrant;
   result: TriageBriefingResult;
-  isOpen: boolean;
   onClose: () => void;
 }) {
   const [detailsExpanded, setDetailsExpanded] = useState(false);
   const severityColor = getSeverityColor(registrant.damageSeverity);
 
   useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         onClose();
@@ -383,15 +367,9 @@ function FullBriefingOverlay({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [onClose]);
 
-  useEffect(() => {
-    if (!isOpen) {
-      setDetailsExpanded(false);
-    }
-  }, [isOpen]);
-
-  if (!isOpen || typeof document === "undefined") {
+  if (typeof document === "undefined") {
     return null;
   }
 

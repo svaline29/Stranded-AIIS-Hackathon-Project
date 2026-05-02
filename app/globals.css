@@ -149,18 +149,6 @@
   font-family: "IBM Plex Mono", monospace;
 }
 
-@keyframes disaster-pulse {
-  0%,
-  100% {
-    border-color: var(--accent);
-    opacity: 1;
-  }
-  50% {
-    border-color: var(--accent);
-    opacity: 0.4;
-  }
-}
-
 @keyframes stat-flash {
   0% {
     color: var(--accent);
@@ -188,10 +176,6 @@
   100% {
     opacity: 0;
   }
-}
-
-.disaster-pulse {
-  animation: disaster-pulse 1s ease-in-out;
 }
 
 .stat-flash {
