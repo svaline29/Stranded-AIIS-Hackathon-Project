@@ -4,9 +4,11 @@
  
 In a major disaster, the people most likely to die are the ones standard response can't reach — oxygen-dependent residents whose power is out, dialysis patients who can't evacuate, people who don't speak English. Stranded gives any FEMA-trained responder a real-time ranked list of who needs help first, with AI-generated dispatch briefings that tell them exactly what to bring and what to expect at the door.
  
-Built at the AIIS AI Innovation Hackthon, @ University of Minnesota - Twin Cities · May 1-2 2026
+Built at the AIIS Hackathon, @ University of Minnesota - Twin Cities · May 1-2 2026
  
-[LIVE DEMO LINK]
+LIVE HOSTED DEMO: 
+
+[https://stranded-aiis-hackathon-project.vercel.app]
  
 ---
  
@@ -40,7 +42,7 @@ The result: any responder with basic FEMA training can open Stranded, click a na
  
 ## Demo
  
-![Demo]
+> **Live demo:** [https://stranded-aiis-hackathon-project.vercel.app] — open on any device, no setup required.
  
 The dashboard shows:
 - Real-time priority list ranked by risk score
@@ -59,6 +61,7 @@ The data layer is built entirely on public sources:
 | TIGER/Line 2020 | Block group geometries for Buncombe County NC | Choropleth rendering + registrant BG lookup |
 | Hand-traced damage polygons | 10 polygons over Asheville/Swannanoa neighborhoods | Damage overlay + risk scoring |
 | Synthetic registrants (15) | Representative vulnerable population profiles | Priority list + dispatch demo |
+| Turso (libSQL) | Hosted SQLite database | Production data persistence on Vercel |
  
 Risk scoring formula:
  
@@ -107,7 +110,7 @@ P3/P4 require manual trigger.
 |-------|--------|-----|
 | Framework | Next.js 14 (App Router, TypeScript) | Full-stack, Vercel-native |
 | Map | MapLibre GL JS | Open source, no token required |
-| Database | SQLite + Drizzle ORM | Zero-setup, single-file, fast |
+| Database | SQLite + Drizzle ORM + Turso | Local file in dev, hosted SQLite in production |
 | LLM | Anthropic Claude (Sonnet 4.5 + Haiku 4.5) | Best reasoning quality for dispatch voice |
 | Styling | Tailwind CSS + shadcn/ui | Fast, consistent |
 | Geo | turf.js | Point-in-polygon, distance calculations |
@@ -122,6 +125,10 @@ cd stranded
 pnpm install
 cp .env.local.example .env.local
 # Add your ANTHROPIC_API_KEY to .env.local
+# For local dev, SQLite file is used automatically (no Turso needed)
+# For production deploy, also add:
+# TURSO_DATABASE_URL=your-turso-url
+# TURSO_AUTH_TOKEN=your-turso-token
 pnpm db:generate && pnpm db:migrate
 pnpm tsx lib/seed/seedScript.ts
 pnpm dev
@@ -153,6 +160,7 @@ Replace hand-traced polygons with Claude vision running on NOAA Emergency Respon
 - Damage polygons are hand-traced for this demo. Production deployment would source these from NOAA Emergency Response Imagery (released within 24-48hrs of major US disasters) via automated vision LLM detection — see What's Next.
 - Risk scoring weights are defensible defaults, not clinically validated.
 - Single-disaster scope (Buncombe County NC). Geographic generalization requires Census data pipeline extension to new counties.
+- Dispatch briefing generation requires an Anthropic API key. Pre-cached briefings for all P1/P2 registrants are included in the demo deployment.
 ---
  
 ## Sources
