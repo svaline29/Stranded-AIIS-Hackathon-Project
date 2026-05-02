@@ -1,7 +1,10 @@
 # Stranded
  
 **AI-powered disaster triage for vulnerable populations.**
- 
+
+<img width="1335" height="740" alt="Dashboard Screenshot" src="https://github.com/user-attachments/assets/c2708cfd-954a-4a89-9fce-0c42c9f4f61f" />
+
+
 In a major disaster, the people most likely to die are the ones standard response can't reach — oxygen-dependent residents whose power is out, dialysis patients who can't evacuate, people who don't speak English. Stranded gives any FEMA-trained responder a real-time ranked list of who needs help first, with AI-generated dispatch briefings that tell them exactly what to bring and what to expect at the door.
  
 Built at the AIIS Hackathon, @ University of Minnesota - Twin Cities · May 1-2 2026
