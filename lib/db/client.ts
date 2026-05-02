@@ -1,14 +1,11 @@
-import path from "path";
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import * as schema from "./schema";
+import path from 'path'
+import Database from 'better-sqlite3'
 
-const dbPath = path.join(process.cwd(), "stranded.db");
+const dbPath = path.join(process.cwd(), 'stranded.db')
 
-const sqlite = new Database(dbPath);
+const db = new Database(dbPath, {
+  readonly: process.env.NODE_ENV === 'production',
+  fileMustExist: true
+})
 
-// Enable WAL mode for better read/write concurrency during development
-sqlite.pragma("journal_mode = WAL");
-
-export const db = drizzle(sqlite, { schema });
-export type DB = typeof db;
+export default db
