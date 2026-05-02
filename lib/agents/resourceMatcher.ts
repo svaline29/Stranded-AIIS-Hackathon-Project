@@ -34,7 +34,7 @@ export const resourceMatcherOutputSchema = z.object({
 export type ResourceMatcherInput = z.infer<typeof resourceMatcherInputSchema>;
 export type ResourceMatcherOutput = z.infer<typeof resourceMatcherOutputSchema>;
 
-const MODEL = "claude-sonnet-4-5";
+const MODEL = "claude-haiku-4-5";
 const SYSTEM_PROMPT =
   "You are a disaster resource allocation specialist. Map the provided dependencies and priority tier to specific resource tags from the controlled vocabulary. Respond ONLY with valid JSON.";
 
