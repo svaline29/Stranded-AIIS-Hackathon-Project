@@ -4,12 +4,14 @@ import { damagePolygons, disasterState, registrants } from "../lib/db/schema";
 
 const EXPECTED_REGISTRANT_COUNT = 15;
 
-function tableCount(table: typeof disasterState | typeof damagePolygons | typeof registrants): number {
-  return getDb().select({ value: count() }).from(table).get()?.value ?? 0;
+async function tableCount(
+  table: typeof disasterState | typeof damagePolygons | typeof registrants,
+): Promise<number> {
+  return (await getDb().select({ value: count() }).from(table).get())?.value ?? 0;
 }
 
-function main(): void {
-  const registrantsMissingBlockGroup = getDb()
+async function main(): Promise<void> {
+  const registrantsMissingBlockGroup = await getDb()
     .select({
       id: registrants.id,
       fullName: registrants.fullName,
@@ -19,9 +21,9 @@ function main(): void {
     .where(isNull(registrants.blockGroup))
     .all();
 
-  const disasterStateCount = tableCount(disasterState);
-  const damagePolygonCount = tableCount(damagePolygons);
-  const registrantCount = tableCount(registrants);
+  const disasterStateCount = await tableCount(disasterState);
+  const damagePolygonCount = await tableCount(damagePolygons);
+  const registrantCount = await tableCount(registrants);
 
   console.log(`disaster_state: ${disasterStateCount}`);
   console.log(`damage_polygons: ${damagePolygonCount}`);
@@ -43,4 +45,7 @@ function main(): void {
   process.exit(0);
 }
 
-main();
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

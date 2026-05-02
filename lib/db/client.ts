@@ -1,16 +1,13 @@
-import path from 'path'
-import Database from 'better-sqlite3'
-import { drizzle } from 'drizzle-orm/better-sqlite3'
+import { createClient } from '@libsql/client'
+import { drizzle } from 'drizzle-orm/libsql'
 import * as schema from './schema'
 
 function createDb() {
-  const dbPath = path.join(process.cwd(), 'stranded.db')
-  const sqlite = new Database(dbPath, {
-    readonly: process.env.NODE_ENV === 'production',
-    fileMustExist: true,
+  const client = createClient({
+    url: `file:${process.cwd()}/stranded.db`,
   })
 
-  return drizzle(sqlite, { schema })
+  return drizzle(client, { schema })
 }
 
 type DbClient = ReturnType<typeof createDb>
@@ -23,6 +20,3 @@ export function getDb(): DbClient {
   }
   return _db
 }
-
-// Keep default export for backward compatibility
-//export default getDb()

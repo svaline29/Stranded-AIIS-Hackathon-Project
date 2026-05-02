@@ -40,7 +40,7 @@ function parsePolygonGeometry(value: string, id: string): GeoJsonPolygon {
 }
 
 export async function GET() {
-  const rows = getDb().select().from(damagePolygons).all();
+  const rows = await getDb().select().from(damagePolygons).all();
 
   const collection: DamageFeatureCollection = {
     type: "FeatureCollection",

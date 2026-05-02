@@ -34,7 +34,7 @@ function parseDependencies(value: string, id: string): Dependency[] {
 }
 
 export async function GET() {
-  const rows = getDb().select().from(registrants).all();
+  const rows = await getDb().select().from(registrants).all();
 
   const response: Registrant[] = rows.map((row) => ({
     ...row,

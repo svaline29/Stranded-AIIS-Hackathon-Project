@@ -77,7 +77,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const registrant = getDb()
+  const registrant = await getDb()
     .select()
     .from(registrants)
     .where(eq(registrants.id, registrantId))
@@ -89,7 +89,7 @@ export async function POST(request: Request) {
   }
 
   const freshAfter = Date.now() - CACHE_TTL_MS;
-  const cached = getDb()
+  const cached = await getDb()
     .select()
     .from(dispatchBriefings)
     .where(
@@ -107,7 +107,7 @@ export async function POST(request: Request) {
   }
 
   const dependencies = parseDependencies(registrant.dependencies, registrant.id);
-  const damage = findDamageContext(registrant.lon, registrant.lat);
+  const damage = await findDamageContext(registrant.lon, registrant.lat);
   const hoursSinceContact =
     registrant.lastContactAt === null
       ? null
@@ -167,7 +167,7 @@ export async function POST(request: Request) {
       fallback: false,
     } satisfies AgentResult;
 
-    insertBriefing(result);
+    await insertBriefing(result);
     return Response.json(result);
   } catch (error) {
     console.error(`[triage] ${registrant.id}: agent failure`, error);
@@ -186,14 +186,14 @@ export async function POST(request: Request) {
       riskScore,
     });
 
-    insertBriefing(result);
+    await insertBriefing(result);
     return Response.json(result);
   }
 }
 
-function findDamageContext(lon: number, lat: number): DamageContext {
+async function findDamageContext(lon: number, lat: number): Promise<DamageContext> {
   const registrantPoint = point([lon, lat]);
-  const polygons = getDb().select().from(damagePolygons).all();
+  const polygons = await getDb().select().from(damagePolygons).all();
 
   return polygons.reduce<DamageContext>(
     (highest, polygonRow) => {
@@ -268,8 +268,8 @@ function buildFallbackResult({
   };
 }
 
-function insertBriefing(result: AgentResult) {
-  getDb().insert(dispatchBriefings)
+async function insertBriefing(result: AgentResult) {
+  await getDb().insert(dispatchBriefings)
     .values({
       id: randomUUID(),
       registrantId: result.registrantId,
