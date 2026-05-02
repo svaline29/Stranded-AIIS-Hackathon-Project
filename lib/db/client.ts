@@ -1,11 +1,18 @@
 import path from 'path'
-import Database from 'better-sqlite3'
+import Database, { Database as DatabaseType } from 'better-sqlite3'
 
-const dbPath = path.join(process.cwd(), 'stranded.db')
+let _db: DatabaseType | null = null
 
-const db = new Database(dbPath, {
-  readonly: process.env.NODE_ENV === 'production',
-  fileMustExist: true
-})
+export function getDb(): DatabaseType {
+  if (!_db) {
+    const dbPath = path.join(process.cwd(), 'stranded.db')
+    _db = new Database(dbPath, {
+      readonly: process.env.NODE_ENV === 'production',
+      fileMustExist: true,
+    })
+  }
+  return _db
+}
 
-export default db
+// Keep default export for backward compatibility
+export default getDb()
