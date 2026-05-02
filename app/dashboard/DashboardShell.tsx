@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Badge } from "@/components/ui/badge";
 import { DispatchBriefing } from "@/components/dashboard/DispatchBriefing";
 import { PriorityList } from "@/components/dashboard/PriorityList";
@@ -244,6 +245,7 @@ function RegistrantPanel({
   onRegenerateBriefing: () => void;
 }) {
   const [detailsExpanded, setDetailsExpanded] = useState(false);
+  const [fullBriefingOpen, setFullBriefingOpen] = useState(false);
   const panelRef = useRef<HTMLElement | null>(null);
 
   useLayoutEffect(() => {
@@ -251,6 +253,7 @@ function RegistrantPanel({
       panelRef.current.scrollTop = 0;
     }
     setDetailsExpanded(false);
+    setFullBriefingOpen(false);
   }, [registrant.id]);
 
   return (
@@ -293,6 +296,24 @@ function RegistrantPanel({
         triageState={triageState}
       />
 
+      {triageState.status === "ready" ? (
+        <>
+          <button
+            type="button"
+            className="mt-5 w-full rounded-[3px] border border-[var(--accent)] bg-transparent px-3 py-2.5 font-mono text-[11px] tracking-wide text-[var(--accent)] uppercase transition-colors hover:bg-[var(--accent-dim)]"
+            onClick={() => setFullBriefingOpen(true)}
+          >
+            OPEN FULL BRIEFING ↗
+          </button>
+          <FullBriefingOverlay
+            registrant={registrant}
+            result={triageState.result}
+            isOpen={fullBriefingOpen}
+            onClose={() => setFullBriefingOpen(false)}
+          />
+        </>
+      ) : null}
+
       <div className="mt-5 border-t border-[var(--border-subtle)] pt-4">
         <button
           type="button"
@@ -307,29 +328,7 @@ function RegistrantPanel({
             detailsExpanded ? "max-h-[520px]" : "max-h-0",
           ].join(" ")}
         >
-          <dl className="mt-3 space-y-3 font-sans text-xs text-[var(--text-secondary)]">
-            <DetailRow label="Address" value={registrant.address} />
-            <DetailRow label="Phone" value={registrant.contactPhone} />
-            <div>
-              <dt className="text-[var(--text-muted)]">Dependencies</dt>
-              <dd className="mt-1 flex flex-wrap gap-2">
-                {registrant.dependencies.map((dependency) => (
-                  <Badge
-                    key={dependency}
-                    variant="outline"
-                    className="rounded-[3px] border border-[#282828] bg-[#161616] px-2 py-0.5 font-mono text-[10px] font-normal text-[#999999]"
-                  >
-                    {formatDependencyLabel(dependency)}
-                  </Badge>
-                ))}
-              </dd>
-            </div>
-            <DetailRow label="Language" value={registrant.primaryLanguage} />
-            {registrant.caregiverPhone !== null ? (
-              <DetailRow label="Caregiver phone" value={registrant.caregiverPhone} />
-            ) : null}
-            <DetailRow label="Registered via" value={formatStatusLabel(registrant.registeredVia)} />
-          </dl>
+          <RegistrantDetails registrant={registrant} />
         </div>
       </div>
 
@@ -354,6 +353,230 @@ function RegistrantPanel({
       ) : null}
 
     </aside>
+  );
+}
+
+function FullBriefingOverlay({
+  registrant,
+  result,
+  isOpen,
+  onClose,
+}: {
+  registrant: EnrichedRegistrant;
+  result: TriageBriefingResult;
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
+  const severityColor = getSeverityColor(registrant.damageSeverity);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setDetailsExpanded(false);
+    }
+  }, [isOpen]);
+
+  if (!isOpen || typeof document === "undefined") {
+    return null;
+  }
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[rgba(0,0,0,0.7)] p-6 backdrop-blur-[4px]"
+      role="presentation"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <section
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="full-briefing-title"
+        className="my-auto w-full max-w-[680px] rounded-[4px] border border-[var(--border-default)] bg-[var(--bg-surface)] p-6 shadow-2xl"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge
+              variant="outline"
+              className="rounded-[3px] border bg-transparent px-2 py-0.5 font-mono text-[10px] font-normal uppercase"
+              style={getSeverityStyles(registrant.damageSeverity)}
+            >
+              {formatSeverityLabel(registrant.damageSeverity)}
+            </Badge>
+            <Badge
+              variant="outline"
+              className="rounded-[3px] border bg-transparent px-2 py-0.5 font-mono text-[10px] font-normal"
+              style={getPriorityStyles(result.triage.priority_tier)}
+            >
+              {result.triage.priority_tier}
+            </Badge>
+          </div>
+          <button
+            type="button"
+            className="font-mono text-[16px] leading-none text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
+            aria-label="Close full briefing"
+            onClick={onClose}
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="mt-5">
+          <h2
+            id="full-briefing-title"
+            className="font-sans text-[24px] leading-tight font-semibold tracking-wide text-[var(--text-primary)] uppercase"
+          >
+            {registrant.fullName} · {registrant.age ?? "unknown"}
+          </h2>
+          <p className="mt-1 font-mono text-[13px] text-[var(--text-secondary)]">
+            {registrant.address}
+          </p>
+        </div>
+
+        <div className="mt-6 border-t border-[var(--border-subtle)] pt-5">
+          <h3 className="font-sans text-[18px] font-semibold text-[var(--text-primary)]">
+            → PRIORITY ACTION
+          </h3>
+          <p className="mt-3 rounded-[3px] border-l-[3px] border-[var(--accent)] bg-[var(--bg-elevated)] p-4 font-sans text-[17px] leading-relaxed font-semibold text-[var(--text-primary)]">
+            {result.dispatch.priority_action}
+          </p>
+        </div>
+
+        <div className="mt-6 border-t border-[var(--border-subtle)] pt-5">
+          <h3 className="font-mono text-[11px] font-medium tracking-[0.2em] text-[var(--text-muted)] uppercase">
+            DISPATCH BRIEFING
+          </h3>
+          <p
+            className="mt-3 rounded-[3px] border-l-[3px] bg-[var(--bg-elevated)] p-4 font-mono text-[14px] leading-[1.8] text-[var(--text-secondary)]"
+            style={{ borderLeftColor: severityColor }}
+          >
+            {result.dispatch.briefing}
+          </p>
+          {result.dispatch.access_notes !== null ? (
+            <p className="mt-3 font-mono text-[12px] text-[var(--text-muted)]">
+              ⚠ {result.dispatch.access_notes}
+            </p>
+          ) : null}
+        </div>
+
+        <div className="mt-6 border-t border-[var(--border-subtle)] pt-5">
+          <h3 className="font-mono text-[11px] font-medium tracking-[0.2em] text-[var(--text-muted)] uppercase">
+            TRIAGE ASSESSMENT
+          </h3>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <p className="font-sans text-[15px] text-[var(--text-secondary)] italic">
+              {result.triage.primary_concern}
+            </p>
+            <span className="text-[var(--text-muted)]">·</span>
+            <Badge
+              variant="outline"
+              className="rounded-[3px] border bg-transparent px-2.5 py-1 font-mono text-[11px] font-normal uppercase"
+              style={getTimeSensitivityStyles(result.triage.time_sensitivity)}
+            >
+              {result.triage.time_sensitivity}
+            </Badge>
+            <span className="text-[var(--text-muted)]">·</span>
+            <p className="font-mono text-[11px] text-[var(--text-muted)]">
+              CONF {result.triage.confidence.toFixed(2)}
+            </p>
+          </div>
+          <p className="mt-4 font-mono text-[12px] text-[var(--text-muted)]">Immediate risks:</p>
+          <ul className="mt-2 space-y-1 font-mono text-[13px] leading-relaxed text-[var(--text-secondary)]">
+            {result.triage.immediate_risks.map((risk) => (
+              <li key={risk}>▸ {risk}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mt-6 border-t border-[var(--border-subtle)] pt-5">
+          <h3 className="font-mono text-[11px] font-medium tracking-[0.2em] text-[var(--text-muted)] uppercase">
+            DISPATCH RESOURCES
+          </h3>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {result.resourceMatcher.resource_tags.map((tag) => (
+              <Badge
+                key={tag}
+                variant="outline"
+                className="rounded-[3px] border bg-[#161616] px-3 py-1 font-mono text-[11px] font-normal text-[#999999]"
+                style={getResourceTagStyles(tag)}
+              >
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-6 border-t border-[var(--border-subtle)] pt-5">
+          <button
+            type="button"
+            className="font-mono text-[11px] text-[var(--text-muted)] uppercase transition-colors hover:text-[var(--text-secondary)]"
+            onClick={() => setDetailsExpanded((current) => !current)}
+          >
+            Registrant Details {detailsExpanded ? "▾" : "▸"}
+          </button>
+          <div
+            className={[
+              "overflow-hidden transition-[max-height] duration-200 ease-in-out",
+              detailsExpanded ? "max-h-[520px]" : "max-h-0",
+            ].join(" ")}
+          >
+            <RegistrantDetails registrant={registrant} className="text-sm" />
+          </div>
+        </div>
+      </section>
+    </div>,
+    document.body,
+  );
+}
+
+function RegistrantDetails({
+  registrant,
+  className = "text-xs",
+}: {
+  registrant: EnrichedRegistrant;
+  className?: string;
+}) {
+  return (
+    <dl className={`mt-3 space-y-3 font-sans ${className} text-[var(--text-secondary)]`}>
+      <DetailRow label="Address" value={registrant.address} />
+      <DetailRow label="Phone" value={registrant.contactPhone} />
+      <div>
+        <dt className="text-[var(--text-muted)]">Dependencies</dt>
+        <dd className="mt-1 flex flex-wrap gap-2">
+          {registrant.dependencies.map((dependency) => (
+            <Badge
+              key={dependency}
+              variant="outline"
+              className="rounded-[3px] border border-[#282828] bg-[#161616] px-2 py-0.5 font-mono text-[10px] font-normal text-[#999999]"
+            >
+              {formatDependencyLabel(dependency)}
+            </Badge>
+          ))}
+        </dd>
+      </div>
+      <DetailRow label="Language" value={registrant.primaryLanguage} />
+      {registrant.caregiverPhone !== null ? (
+        <DetailRow label="Caregiver phone" value={registrant.caregiverPhone} />
+      ) : null}
+      <DetailRow label="Registered via" value={formatStatusLabel(registrant.registeredVia)} />
+    </dl>
   );
 }
 
@@ -440,4 +663,38 @@ function getPriorityStyles(priorityTier: EnrichedRegistrant["priorityTier"]) {
     return { borderColor: "rgba(234, 179, 8, 0.6)", color: "#eab308" };
   }
   return { borderColor: "rgba(64, 64, 64, 0.7)", color: "#777777" };
+}
+
+function getSeverityColor(severity: EnrichedRegistrant["damageSeverity"]): string {
+  if (severity === "destroyed") {
+    return "#ef4444";
+  }
+  if (severity === "major") {
+    return "#f97316";
+  }
+  if (severity === "minor") {
+    return "#eab308";
+  }
+  return "#404040";
+}
+
+function getTimeSensitivityStyles(value: "hours" | "days" | "weeks" | "none") {
+  if (value === "hours") {
+    return { borderColor: "rgba(239, 68, 68, 0.55)", color: "#ef4444" };
+  }
+  if (value === "days") {
+    return { borderColor: "rgba(249, 115, 22, 0.55)", color: "#f97316" };
+  }
+  if (value === "weeks") {
+    return { borderColor: "rgba(234, 179, 8, 0.55)", color: "#eab308" };
+  }
+  return { borderColor: "rgba(64, 64, 64, 0.7)", color: "#777777" };
+}
+
+function getResourceTagStyles(tag: string) {
+  if (tag === "medical_o2" || tag === "dialysis_transport" || tag === "medical_advanced") {
+    return { borderColor: "var(--accent)" };
+  }
+
+  return { borderColor: "#282828" };
 }

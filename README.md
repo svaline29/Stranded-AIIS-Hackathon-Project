@@ -1,91 +1,169 @@
 # Stranded
-
-> AI-powered disaster response triage for vulnerable populations.
-
-## Current State
-
-Built and working now:
-
-- `/dashboard` renders a responder dashboard with a MapLibre map centered on Asheville.
-- The map shows registrant pins, hand-traced damage polygons, and a toggleable demographic overlay for age 65+, disability, limited English proficiency, and composite vulnerability.
-- The dashboard includes a ranked priority list, a stats bar, a selected-registrant details panel, and deterministic dispatch briefing text.
-- Local API routes read registrants and damage polygons from SQLite and the dashboard computes risk scores in the browser.
-
-Data that exists:
-
-- 15 synthetic registrants in Buncombe County, seeded into SQLite.
-- 10 hand-traced damage polygons in `notes/damagePolygons.geojson`.
-- ACS 5-year data and Census block group geometries cached in `public/data/`.
-
-Not built yet:
-
-- Multi-agent LLM reasoning.
-- Vision LLM damage detection.
-- Voice registration.
-- Welfare check loop.
-
-## What It Does (Planned)
-
-- Pre-disaster: vulnerable individuals or caregivers register their dependencies (oxygen, mobility, dialysis, language, etc.).
-- During disaster: AI analyzes damage from satellite/aerial imagery, scores each registrant by combined damage × dependency × time-since-contact, and produces natural-language dispatch briefings for responders.
-- Stretch: AI voice agents proactively call registrants to confirm safety and escalate non-responders.
-
+ 
+**AI-powered disaster triage for vulnerable populations.**
+ 
+In a major disaster, the people most likely to die are the ones standard response can't reach — oxygen-dependent residents whose power is out, dialysis patients who can't evacuate, people who don't speak English. Stranded gives any FEMA-trained responder a real-time ranked list of who needs help first, with AI-generated dispatch briefings that tell them exactly what to bring and what to expect at the door.
+ 
+Built at the AIIS AI Innovation Hackthon, @ University of Minnesota - Twin Cities · May 1-2 2026
+ 
+[LIVE DEMO LINK]
+ 
+---
+ 
+## The Problem
+ 
+Standard disaster response assumes people can self-evacuate, call 911, or be reported by neighbors. For people with disabilities, life-sustaining equipment dependencies, or limited English proficiency, every one of those assumptions fails.
+ 
+After Hurricane Helene struck western North Carolina in September 2024, Annie Harris — a resident of an Asheville retirement complex — was still without clean water two weeks later. She couldn't carry water buckets herself. Nobody came.
+ 
+According to the US Census Bureau, 15.9% of people in the Helene disaster counties had a disability — higher than the statewide average. During Hurricane Florence (NC, 2018), two of every three deaths were adults over 60.
+ 
+The gap isn't resources. It's information. Responders don't know who needs help, where they are, or what they need. Stranded closes that gap.
+ 
+*Sources: WUNC/BPR (Oct 13 2024), US Census Bureau (Oct 11 2024). See notes/sources.md.*
+ 
+---
+ 
+## What It Does
+ 
+**Pre-disaster:** Vulnerable individuals or their caregivers register their address and dependencies (oxygen, dialysis, mobility, deaf/HOH, cognitive, limited English, lives alone, medication-critical).
+ 
+**During disaster:** Stranded cross-references the registrant database against damage data, scores each person by combined damage severity × dependency weight × time since contact, and surfaces the highest-risk cases to responders.
+ 
+**AI dispatch briefings:** For each high-priority registrant, three Claude agents run sequentially:
+- **Triage agent** — assesses priority tier (P1–P4), immediate risks, and time sensitivity
+- **Dispatch agent** — generates a terse, radio-style briefing telling the responder what to bring and what to expect
+- **Resource matcher** — outputs a controlled-vocabulary resource tag set (medical_o2, dialysis_transport, asl_interpreter, etc.)
+The result: any responder with basic FEMA training can open Stranded, click a name, and have a complete situational picture in under 10 seconds — without requiring domain expertise to triage.
+ 
+---
+ 
+## Demo
+ 
+![Demo]
+ 
+The dashboard shows:
+- Real-time priority list ranked by risk score
+- Damage zone overlay on a live map (Hurricane Helene, Asheville/Swannanoa)
+- Demographic vulnerability choropleth (% over 65, disability rate, LEP)
+- AI-generated dispatch briefings with full-screen overlay for readability
+---
+ 
+## Data Pipeline
+ 
+The data layer is built entirely on public sources:
+ 
+| Source | What it provides | How it's used |
+|--------|-----------------|---------------|
+| US Census ACS 5-year | Block-group demographics (age, disability, LEP, single-household) | Vulnerability choropleth |
+| TIGER/Line 2020 | Block group geometries for Buncombe County NC | Choropleth rendering + registrant BG lookup |
+| Hand-traced damage polygons | 10 polygons over Asheville/Swannanoa neighborhoods | Damage overlay + risk scoring |
+| Synthetic registrants (15) | Representative vulnerable population profiles | Priority list + dispatch demo |
+ 
+Risk scoring formula:
+ 
+```
+risk = dependency_weight × damage_multiplier × contact_multiplier
+```
+ 
+Where:
+- `dependency_weight` = sum of per-dependency weights (oxygen: 1.0, dialysis: 1.0, medication_critical: 0.8, mobility: 0.7, cognitive: 0.7, lives_alone: +0.3 multiplier...)
+- `damage_multiplier` = 0 (none) / 0.5 (minor) / 1.5 (major) / 2.5 (destroyed)
+- `contact_multiplier` = min(1 + hours_since_contact / 12, 3.0)
+This is a real-time, individual-level analog of the Census Bureau's Community Resilience Estimates methodology, which uses 10 social vulnerability components to assess disaster resilience at the neighborhood level.
+ 
+---
+ 
+## Multi-Agent Architecture
+ 
+Three Claude agents run sequentially per triage request:
+ 
+```
+POST /api/triage
+    │
+    ├─ Triage Agent (claude-sonnet-4-5)
+    │   Input:  registrant + damage context + hours since contact
+    │   Output: { priority_tier, primary_concern, immediate_risks,
+    │             time_sensitivity, confidence }
+    │
+    ├─ Dispatch Agent (claude-sonnet-4-5)
+    │   Input:  triage output + registrant + damage
+    │   Output: { briefing, access_notes, priority_action }
+    │
+    └─ Resource Matcher (claude-haiku-4-5)
+        Input:  dependencies + priority tier
+        Output: { resource_tags[], rationale }
+ 
+Results cached in SQLite (10-minute TTL).
+P1/P2 briefings auto-generate on panel open.
+P3/P4 require manual trigger.
+```
+ 
+---
+ 
 ## Tech Stack
-
-Next.js 16 App Router · React 19 · TypeScript · Tailwind CSS 4 · shadcn/ui · MapLibre GL JS · SQLite + better-sqlite3 · Drizzle · Turf · Anthropic SDK
-
-## Data Sources
-
-- US Census American Community Survey (5-year estimates)
-- NOAA Emergency Response Imagery (Hurricane Helene, Sept 2024)
-- Maxar Open Data (pre-event baseline)
-- OpenStreetMap (via MapLibre + Nominatim)
-
+ 
+| Layer | Choice | Why |
+|-------|--------|-----|
+| Framework | Next.js 14 (App Router, TypeScript) | Full-stack, Vercel-native |
+| Map | MapLibre GL JS | Open source, no token required |
+| Database | SQLite + Drizzle ORM | Zero-setup, single-file, fast |
+| LLM | Anthropic Claude (Sonnet 4.5 + Haiku 4.5) | Best reasoning quality for dispatch voice |
+| Styling | Tailwind CSS + shadcn/ui | Fast, consistent |
+| Geo | turf.js | Point-in-polygon, distance calculations |
+ 
+---
+ 
 ## Local Development
-
+ 
 ```bash
+git clone https://github.com/svalin29/stranded
+cd stranded
 pnpm install
 cp .env.local.example .env.local
+# Add your ANTHROPIC_API_KEY to .env.local
 pnpm db:generate && pnpm db:migrate
 pnpm tsx lib/seed/seedScript.ts
 pnpm dev
+# Open localhost:3000
 ```
-
-Open `http://localhost:3000`.
-
-No environment keys are required for the current Layer 1 dashboard. `.env.local.example` includes keys for planned LLM, voice, SMS, and local tunnel work.
-
-## Architecture
-
-`app/` contains the Next.js routes, including `/`, `/register`, `/dashboard`, and local API routes.
-
-`components/` contains dashboard, map, and shared UI components.
-
-`lib/` contains database schema/client code, migrations entrypoint, seed logic, and risk scoring.
-
-`drizzle/` contains generated SQLite migration files.
-
-`public/data/` contains cached ACS data and Census block group GeoJSON used by the demographic overlay.
-
-`notes/` contains source notes and manually traced damage polygons.
-
-`scripts/` contains one-shot data fetch and seed verification scripts.
-
-## Layers (Build Plan)
-
-| Layer | Description | Status |
-|-------|-------------|--------|
-| 0 | Foundation + data pipeline | ✅ Complete |
-| 1 | Static dashboard + map | ✅ Complete |
-| 2 | Multi-agent LLM reasoning | 🔲 Planned |
-| 3 | Vision LLM damage detection | 🔲 Planned |
-| 4 | Accessible registration + voice intake | 🔲 Planned |
-| 5 | Welfare check loop | 🔲 Planned |
-
-## Sources & Inspiration
-
-See `notes/sources.md`.
-
-## License
-
-TBD
+ 
+No other API keys required for full functionality.
+ 
+---
+ 
+## What's Next
+ 
+This hackathon build demonstrates the core triage and dispatch loop. The three features I'd build next, in order:
+ 
+**1. Voice registration (highest priority)**
+The system only works if vulnerable people are in the database. A Vapi voice agent would let anyone register by calling a phone number — no app, no internet, no literacy required. The AI agent asks 5 questions, geocodes the address, and creates the registrant record. A local area code number matching the disaster region makes it feel trustworthy and accessible.
+ 
+**2. Proactive welfare check calls**
+When disaster mode activates, the system calls every registrant in a damage zone. "Hi, this is Buncombe County emergency check-in. Are you safe?" Responses update contact status in real time, reordering the priority list. Non-responders escalate automatically. This closes the loop the current system leaves open.
+ 
+**3. Vision LLM damage detection**
+Replace hand-traced polygons with Claude vision running on NOAA Emergency Response Imagery tile pairs. Pre/post image comparison at the block level, outputting GeoJSON damage polygons that feed directly into the risk scoring pipeline. NOAA releases imagery within 24-48 hours of a US disaster — this would make Stranded deployable in the first response window of any major US event.
+ 
+---
+ 
+## Limitations
+ 
+- Registrant database is synthetic (15 demo profiles). Real deployment requires community outreach for enrollment — the hardest problem this system faces is not technical.
+- Damage polygons are hand-traced from neighborhood knowledge of Helene, not computed from imagery. Accuracy is approximate.
+- Risk scoring weights are defensible defaults, not clinically validated.
+- Single-disaster scope (Buncombe County NC). Geographic generalization requires Census data pipeline extension to new counties.
+---
+ 
+## Sources
+ 
+- WUNC/BPR, Katie Myers — "After Helene, disabled folks and seniors still vulnerable and in need of water in western NC" (Oct 13 2024)
+- US Census Bureau — "More Than Half a Million North Carolinians Under Disaster Declaration After Hurricane Helene Were at High Social Vulnerability to Disasters" (Oct 11 2024)
+- NOAA Emergency Response Imagery — Hurricane Helene, Sept 2024
+- US Census TIGER/Line 2020 — Block group geometries
+- US Census ACS 5-year estimates — Buncombe County NC
+- OpenStreetMap contributors (via MapLibre + CartoDB)
+Full citations: notes/sources.md
+ 
+---
+ 
