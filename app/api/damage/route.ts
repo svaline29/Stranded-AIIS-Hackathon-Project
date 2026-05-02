@@ -1,4 +1,4 @@
-import { db } from "@/lib/db/client";
+import { getDb } from "@/lib/db/client";
 import { damagePolygons } from "@/lib/db/schema";
 import type { DamageFeatureCollection } from "@/components/map/types";
 
@@ -40,7 +40,7 @@ function parsePolygonGeometry(value: string, id: string): GeoJsonPolygon {
 }
 
 export async function GET() {
-  const rows = db.select().from(damagePolygons).all();
+  const rows = getDb().select().from(damagePolygons).all();
 
   const collection: DamageFeatureCollection = {
     type: "FeatureCollection",

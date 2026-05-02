@@ -1,4 +1,4 @@
-import { db } from "@/lib/db/client";
+import { getDb } from "@/lib/db/client";
 import { registrants } from "@/lib/db/schema";
 import type { Dependency } from "@/lib/db/schema";
 import type { Registrant } from "@/components/map/types";
@@ -34,7 +34,7 @@ function parseDependencies(value: string, id: string): Dependency[] {
 }
 
 export async function GET() {
-  const rows = db.select().from(registrants).all();
+  const rows = getDb().select().from(registrants).all();
 
   const response: Registrant[] = rows.map((row) => ({
     ...row,

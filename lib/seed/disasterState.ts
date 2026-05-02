@@ -1,4 +1,4 @@
-import { db } from "../db/client";
+import { getDb } from "../db/client";
 import { disasterState } from "../db/schema";
 
 const BBOX_GEOJSON = JSON.stringify({
@@ -15,7 +15,7 @@ const BBOX_GEOJSON = JSON.stringify({
 });
 
 export function seedDisasterState(): void {
-  db
+  getDb()
     .insert(disasterState)
     .values({
       id: 1,

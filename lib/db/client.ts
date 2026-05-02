@@ -1,15 +1,25 @@
 import path from 'path'
-import Database, { Database as DatabaseType } from 'better-sqlite3'
+import Database from 'better-sqlite3'
+import { drizzle } from 'drizzle-orm/better-sqlite3'
+import * as schema from './schema'
 
-let _db: DatabaseType | null = null
+function createDb() {
+  const dbPath = path.join(process.cwd(), 'stranded.db')
+  const sqlite = new Database(dbPath, {
+    readonly: process.env.NODE_ENV === 'production',
+    fileMustExist: true,
+  })
 
-export function getDb(): DatabaseType {
+  return drizzle(sqlite, { schema })
+}
+
+type DbClient = ReturnType<typeof createDb>
+
+let _db: DbClient | null = null
+
+export function getDb(): DbClient {
   if (!_db) {
-    const dbPath = path.join(process.cwd(), 'stranded.db')
-    _db = new Database(dbPath, {
-      readonly: process.env.NODE_ENV === 'production',
-      fileMustExist: true,
-    })
+    _db = createDb()
   }
   return _db
 }

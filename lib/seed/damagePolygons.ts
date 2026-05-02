@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { db } from "../db/client";
+import { getDb } from "../db/client";
 import { damagePolygons } from "../db/schema";
 import type { DamageSeverity } from "../db/schema";
 
@@ -115,10 +115,10 @@ function loadDamagePolygons(): SeedDamagePolygon[] {
 export const manualDamagePolygons: SeedDamagePolygon[] = loadDamagePolygons();
 
 export function seedDamagePolygons(): void {
-  db.delete(damagePolygons).run();
+  getDb().delete(damagePolygons).run();
 
   for (const polygon of manualDamagePolygons) {
-    db
+    getDb()
       .insert(damagePolygons)
       .values({
         id: polygon.id,

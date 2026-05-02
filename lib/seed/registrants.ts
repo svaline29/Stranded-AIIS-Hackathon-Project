@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { booleanPointInPolygon, point } from "@turf/turf";
-import { db } from "../db/client";
+import { getDb } from "../db/client";
 import { registrants } from "../db/schema";
 import type { ContactStatus, Dependency } from "../db/schema";
 
@@ -370,10 +370,10 @@ export function seedRegistrants(): void {
     );
   }
 
-  db.delete(registrants).run();
+  getDb().delete(registrants).run();
 
   for (const registrant of syntheticRegistrants) {
-    db
+    getDb()
       .insert(registrants)
       .values({
         id: registrant.id,

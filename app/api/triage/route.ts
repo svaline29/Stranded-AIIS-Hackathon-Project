@@ -5,7 +5,7 @@ import { z } from "zod";
 import { runDispatchAgent } from "@/lib/agents/dispatch";
 import { runResourceMatcherAgent } from "@/lib/agents/resourceMatcher";
 import { runTriageAgent, type TriageOutput } from "@/lib/agents/triage";
-import { db } from "@/lib/db/client";
+import { getDb } from "@/lib/db/client";
 import { damagePolygons, dispatchBriefings, registrants } from "@/lib/db/schema";
 import type { DamageSeverity, Dependency } from "@/lib/db/schema";
 import { computeRiskScore } from "@/lib/scoring/riskScore";
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const registrant = db
+  const registrant = getDb()
     .select()
     .from(registrants)
     .where(eq(registrants.id, registrantId))
@@ -89,7 +89,7 @@ export async function POST(request: Request) {
   }
 
   const freshAfter = Date.now() - CACHE_TTL_MS;
-  const cached = db
+  const cached = getDb()
     .select()
     .from(dispatchBriefings)
     .where(
@@ -193,7 +193,7 @@ export async function POST(request: Request) {
 
 function findDamageContext(lon: number, lat: number): DamageContext {
   const registrantPoint = point([lon, lat]);
-  const polygons = db.select().from(damagePolygons).all();
+  const polygons = getDb().select().from(damagePolygons).all();
 
   return polygons.reduce<DamageContext>(
     (highest, polygonRow) => {
@@ -269,7 +269,7 @@ function buildFallbackResult({
 }
 
 function insertBriefing(result: AgentResult) {
-  db.insert(dispatchBriefings)
+  getDb().insert(dispatchBriefings)
     .values({
       id: randomUUID(),
       registrantId: result.registrantId,
