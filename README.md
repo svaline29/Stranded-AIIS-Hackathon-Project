@@ -150,7 +150,7 @@ Replace hand-traced polygons with Claude vision running on NOAA Emergency Respon
 ## Limitations
  
 - Registrant database is synthetic (15 demo profiles). Real deployment requires community outreach for enrollment — the hardest problem this system faces is not technical.
-- Damage polygons are hand-traced from neighborhood knowledge of Helene, not computed from imagery. Accuracy is approximate.
+- Damage polygons are hand-traced for this demo. Production deployment would source these from NOAA Emergency Response Imagery (released within 24-48hrs of major US disasters) via automated vision LLM detection — see What's Next.
 - Risk scoring weights are defensible defaults, not clinically validated.
 - Single-disaster scope (Buncombe County NC). Geographic generalization requires Census data pipeline extension to new counties.
 ---
