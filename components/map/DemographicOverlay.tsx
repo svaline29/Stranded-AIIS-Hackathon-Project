@@ -8,13 +8,7 @@ import type { BlockGroupFeature, BlockGroupFeatureCollection } from "./types";
 
 const DEMOGRAPHIC_SOURCE_ID = "demographic-block-groups";
 const DEMOGRAPHIC_LAYER_ID = "demographic-fill";
-const COLOR_SCALE = [
-  "rgba(6, 182, 212, 0)",
-  "rgba(6, 182, 212, 0.25)",
-  "rgba(6, 182, 212, 0.5)",
-  "rgba(6, 182, 212, 0.75)",
-  "#06b6d4",
-] as const;
+const COLOR_SCALE = ["#161616", "#3a2417", "#6d3518", "#a4501f", "#e87c2e"] as const;
 
 type MetricKey = "over65" | "disability" | "lep" | "composite";
 
