@@ -8,7 +8,13 @@ import type { BlockGroupFeature, BlockGroupFeatureCollection } from "./types";
 
 const DEMOGRAPHIC_SOURCE_ID = "demographic-block-groups";
 const DEMOGRAPHIC_LAYER_ID = "demographic-fill";
-const COLOR_SCALE = ["#161616", "#3a2417", "#6d3518", "#a4501f", "#e87c2e"] as const;
+const COLOR_SCALE = [
+  "rgba(6, 182, 212, 0)",
+  "rgba(6, 182, 212, 0.25)",
+  "rgba(6, 182, 212, 0.5)",
+  "rgba(6, 182, 212, 0.75)",
+  "#06b6d4",
+] as const;
 
 type MetricKey = "over65" | "disability" | "lep" | "composite";
 
@@ -52,6 +58,15 @@ const METRIC_OPTIONS: MetricOption[] = [
   { key: "lep", label: "% LEP" },
   { key: "composite", label: "Composite vulnerability" },
 ];
+
+const LEGEND_LABELS = ["Low", "", "Medium", "", "High"] as const;
+
+const SOURCE_LABELS: Record<MetricKey, string> = {
+  over65: "Source: Census ACS 5-yr · Block group",
+  disability: "Source: Census ACS 5-yr · Tract",
+  lep: "Source: Census ACS 5-yr · Block group",
+  composite: "Source: Census ACS 5-yr · Multi-layer",
+};
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -298,7 +313,26 @@ export function DemographicOverlay({ map }: DemographicOverlayProps) {
         <p className="mt-2 font-mono text-[10px] text-[var(--text-muted)]">
           Toggle off: base map only.
         </p>
-      ) : null}
+      ) : (
+        <div className="mt-2 rounded-[4px] border border-[var(--border-default)] bg-[rgba(15,15,15,0.92)] p-2">
+          <div className="space-y-1">
+            {COLOR_SCALE.map((color, index) => (
+              <div key={color} className="flex items-center gap-2">
+                <span
+                  className="h-3 w-3 shrink-0 border border-[var(--border-default)]"
+                  style={{ backgroundColor: color }}
+                />
+                <span className="font-mono text-[10px] text-[var(--text-muted)]">
+                  {LEGEND_LABELS[index]}
+                </span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-2 font-mono text-[9px] text-[var(--text-muted)]">
+            {SOURCE_LABELS[activeMetric]}
+          </p>
+        </div>
+      )}
       {error !== null ? <p className="mt-2 font-mono text-[10px] text-red-300">{error}</p> : null}
     </div>
   );
